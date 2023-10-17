@@ -13,9 +13,10 @@ import java.util.Objects;
 
 public class SolarSystemHandler implements HttpHandler {
 
-    private static final String RESOURCE_LOCATION = "src/main/resources/";
-    private static final String DEFAULT_IMAGE_PATH = "/images/Solar_System.jpg";
+    private static final String RESOURCE_LOCATION = "src/main/resources/pages/solar_system";
+    private static final String DEFAULT_HTML_PAGE_PATH = "/solar_system.html";
     private static final Map<String, String> IMAGE_PATH_MAP = Map.of(
+            "solar_system","/images/Solar_System.jpg",
             "sun", "/images/Sun.jpg",
             "earth", "/images/Earth.jpg",
             "moon", "/images/Moon.jpg"
@@ -32,14 +33,26 @@ public class SolarSystemHandler implements HttpHandler {
         try (OutputStream responseBody = exchange.getResponseBody()) {
             String name = Objects.requireNonNullElse(resultMap.get("heavenly_body"), "default");
 
-            String imagePath = RESOURCE_LOCATION + IMAGE_PATH_MAP.getOrDefault(name, DEFAULT_IMAGE_PATH);
+            if (name.equals("default")){
+                String htmlPath = RESOURCE_LOCATION + DEFAULT_HTML_PAGE_PATH;
 
-            byte[] imageBytes = ResourcesUtils.extractBytes(imagePath);
+                byte[] htmlBytes = ResourcesUtils.extractBytes(htmlPath);
 
-            exchange.getResponseHeaders().set("Content-Type", "image/jpeg");
-            exchange.sendResponseHeaders(200, imageBytes.length);
+                exchange.getResponseHeaders().set("Content-Type","text/html");
+                exchange.sendResponseHeaders(200,htmlBytes.length);
+                responseBody.write(htmlBytes);
 
-            responseBody.write(imageBytes);
+            } else {
+                String imagePath = RESOURCE_LOCATION + IMAGE_PATH_MAP.get(name);
+
+                byte[] imageBytes = ResourcesUtils.extractBytes(imagePath);
+
+                exchange.getResponseHeaders().set("Content-Type", "image/jpeg");
+                exchange.sendResponseHeaders(200, imageBytes.length);
+                responseBody.write(imageBytes);
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
