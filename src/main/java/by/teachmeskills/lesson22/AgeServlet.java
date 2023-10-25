@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/age", "/age_result"}, loadOnStartup = 1)
+import by.teachmeskills.lesson22.util.AgeUtils;
+
+@WebServlet(urlPatterns = {"/age", "/age_result"})
 public class AgeServlet extends HttpServlet {
 
     @Override
@@ -19,8 +21,7 @@ public class AgeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String result;
         try {
-            System.out.println(request.getParameter("age"));
-            result = Double.parseDouble(request.getParameter("age")) >= 18 ? "You are an adult!" : "You are underage!";
+            result = AgeUtils.checkAdult(Double.parseDouble(request.getParameter("age"))) ? "You are an adult!" : "You are underage!";
         } catch (NumberFormatException | NullPointerException e) {
             result = "Invalid input data!";
         }

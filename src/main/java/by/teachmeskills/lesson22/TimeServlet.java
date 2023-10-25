@@ -14,16 +14,21 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
-@WebServlet(urlPatterns = {"/minsk", "/washington", "/beijing"}, loadOnStartup = 1)
+@WebServlet(urlPatterns = {"/minsk", "/washington", "/beijing"})
 public class TimeServlet extends HttpServlet {
-    Map<String, ZoneId> cityTimeZoneMap = new HashMap<>();
+    Map<String, ZoneId> cityTimeZoneMap;
 
     {
-        cityTimeZoneMap.put("minsk", TimeZone.getTimeZone("Europe/Minsk").toZoneId());
-        cityTimeZoneMap.put("washington", TimeZone.getTimeZone("America/New_York").toZoneId());
-        cityTimeZoneMap.put("beijing", TimeZone.getTimeZone("Asia/Shanghai").toZoneId());
+        cityTimeZoneMap = Map.of(
+                "minsk", TimeZone.getTimeZone("Europe/Minsk").toZoneId(),
+                "washington", TimeZone.getTimeZone("America/New_York").toZoneId(),
+                "beijing", TimeZone.getTimeZone("Asia/Shanghai").toZoneId()
+
+        );
     }
 
     @Override
