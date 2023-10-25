@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson21;
+package by.teachmeskills.lesson21.handlers;
 
 import by.teachmeskills.lesson21.util.HttpUtils;
 import com.sun.net.httpserver.HttpExchange;
