@@ -1,0 +1,207 @@
+body {
+    font-family: "Roboto", serif;
+    background-image: url("../images/library_background.png");
+    background-repeat: repeat-y;
+    background-size: 30%;
+}
+
+.library-header {
+    font-size: 3rem;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.library-help, .library-header {
+    text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 5px #fff;
+}
+
+
+.library {
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+
+.book-list {
+    counter-reset: li;
+    list-style: none;
+    padding: 0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
+
+.book-list li {
+    position: relative;
+}
+
+.book-list a, .book-list label {
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em 2em;
+    margin: .5em 0;
+    background: #DAD2CA;
+    color: #444;
+    text-decoration: none;
+    border-radius: .3em;
+    transition: .3s ease-out;
+}
+
+.book-list a:hover, .book-list label:hover {
+    background: #E9E4E0;
+}
+
+.book-list a:before, .book-list label:before {
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -1.3em;
+    top: 50%;
+    margin-top: -1.3em;
+    background: #8FD4C1;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    border: .3em solid white;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 2em;
+    transition: all .3s ease-out;
+}
+
+.book-list li:last-child a, .book-list li:last-child label {
+    background: cadetblue;
+}
+
+#show-upload-file-checkbox {
+    display: none;
+}
+
+#show-upload-file-checkbox:checked + .library-book-upload {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+}
+
+#show-upload-file {
+    cursor: pointer;
+}
+
+.library-book-upload {
+    max-height: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(95, 158, 160, 0.7);
+    border-radius: 5px;
+    width: 30%;
+    max-width: 800px;
+    min-width: 400px;
+    overflow: hidden;
+}
+
+.library-book-upload p {
+    text-align: center;
+}
+
+.remove-button {
+    background-color: rgba(255, 0, 0, 0.5);
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    border: 1px solid white;
+    border-radius: 0.5rem;
+    margin: 0.2em;
+    width: 6rem;
+    height: 1.6rem;
+    cursor: pointer;
+}
+
+.input-book, .input-book-submit {
+    position: relative;
+    display: inline-block;
+}
+
+.input-book span, .input-book-submit {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    font-size: 14px;
+    vertical-align: middle;
+    color: rgb(255 255 255);
+    text-align: center;
+    border-radius: 4px;
+    background-color: #419152;
+    line-height: 22px;
+    height: 40px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border: none;
+    margin: 0;
+    transition: background-color 0.2s;
+    font-family: "Roboto", serif;
+}
+
+.input-book input[type=file] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+}
+
+.input-book input[type=file]:focus + span {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+.input-book:hover span {
+    background-color: #59be6e;
+}
+
+.input-book:active span {
+    background-color: #2E703A;
+}
+
+.input-book input[type=file]:disabled + span {
+    background-color: #eee;
+}
+
+.library-book-form {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.library-book-form-close {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: white;
+    border-radius: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+.library-book-form-close:before, .library-book-form-close:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    content: "";
+    background-color: black;
+    transform: rotate(45deg);
+    width: 2rem;
+    height: 0.1rem;
+}
+
+.library-book-form-close:after {
+    transform: rotate(-45deg);
+}
