@@ -1,0 +1,199 @@
+@font-face {
+    font-family: Adventure;
+    src: url(Adventure.ttf);
+}
+
+:root {
+    --superhero-name-height: 3rem;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    padding: 5rem;
+}
+
+.superhero-card-collection {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.superhero-card {
+    width: 20rem;
+    height: 30rem;
+    border-radius: 1rem;
+    background: rgb(186, 20, 20);
+    background: linear-gradient(9deg, rgba(186, 20, 20, 1) 0%, rgba(186, 109, 20, 1) 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    user-select: none;
+    transform: rotateY(0deg) rotateX(0deg);
+    transform-style: preserve-3d;
+    transition: transform 1s;
+}
+
+.superhero-card:hover {
+    transform: rotateY(15deg) rotateX(15deg) scale(1.2);
+}
+
+
+.superhero-name {
+    font-family: Adventure;
+    background-image: url(../../images/lesson24/ribbon.svg);
+    background-size: 95%;
+    color: darkorange;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: var(--superhero-name-height);
+    line-height: var(--superhero-name-height);
+    background-position: center;
+    text-align: center;
+    font-size: 2rem;
+    z-index: 3;
+    position: relative;
+}
+
+.superhero-img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    z-index: 1;
+    background-position: center center;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.superhero-description {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 3;
+    position: relative;
+}
+
+.superhero-story,
+.superhero-specs {
+    width: 100%;
+    background: rgba(60, 60, 60, 0.4);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.superhero-specs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    padding: 0.5rem;
+}
+
+.superhero-skills {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+.superhero-skill {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.superhero-skill-item {
+    width: 1.2rem;
+    height: 1.2rem;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+}
+
+.hand-icon {
+    background-image: url(../../images/lesson24/skills_icons/spider-man-hand.png);
+}
+
+.pumpkin-icon {
+    background-image: url(../../images/lesson24/skills_icons/pumpkin.png);
+}
+
+.sun-icon {
+    background-image: url(../../images/lesson24/skills_icons/sun.png);
+}
+
+.empty-icon {
+    border-radius: 50%;
+    border: 1px solid ghostwhite;
+}
+
+.superhero-properties {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.superhero-property {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-style: italic;
+    font-variant: small-caps;
+    line-height: 1.1rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+
+}
+
+.superhero-property-name {
+    font-size: 1.15rem;
+    text-align: end;
+    color: gold;
+    width: 100%;
+}
+
+.superhero-property-number {
+    text-align: start;
+    color: aliceblue;
+    width: 2rem;
+}
+
+.superhero-story-text {
+    font-size: 0.8rem;
+    font-family: 'Comic Sans MS', cursive;
+    font-style: normal;
+    font-variant: small-caps;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+}
