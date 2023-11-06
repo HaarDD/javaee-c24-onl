@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@WebFilter("/*")
+//@WebFilter("/*") //Отключено временно
 public class RequestLoggingFilter implements Filter {
 
     private static final SimpleDateFormat LOG_FILE_DATE_FORMAT = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
