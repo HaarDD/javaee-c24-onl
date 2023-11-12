@@ -1,22 +1,38 @@
 package by.teachmeskills.lesson26.dto;
 
+import by.teachmeskills.lesson26.validation.RequestValidationResponse;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+import static by.teachmeskills.lesson26.validation.RequestValidator.*;
+
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class RepairRequest {
 
     private String requestSessionId;
 
-    private String firstName;
+    private String clientFirstName;
 
-    private String lastName;
+    private String clientLastName;
 
-    private String Address;
+    private String clientAddress;
 
-    private List<String> servicesList;
+    private Boolean clientPersonalDataAgree;
+
+    private List<String> clientService;
+
+    public RequestValidationResponse getRequestValidationResponse() {
+        return new RequestValidationResponse(
+                isClientFirstNameValid(clientFirstName),
+                isClientLastNameValid(clientLastName),
+                isClientAddressValid(clientAddress),
+                isClientPersonalDataAgreeValid(clientPersonalDataAgree),
+                isClientServiceValid(clientService));
+    }
 
 }
