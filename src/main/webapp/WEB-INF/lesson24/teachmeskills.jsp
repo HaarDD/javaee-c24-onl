@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -5,13 +6,13 @@
 </head>
 <style>
     @font-face {
-        font-family: 'Avenir'; /* Имя шрифта, которое вы выбираете */
-        src: url('css/lesson24/AvenirNextRoundedStd-Med.ttf') format('truetype');
+        font-family: 'Avenir';
+        src: url('<c:url value='/css/lesson24/AvenirNextRoundedStd-Med.ttf'/>') format('truetype');
     }
 
     @font-face {
-        font-family: 'EuroMachina'; /* Имя шрифта, которое вы выбираете */
-        src: url('css/lesson24/EuroMachina.ttf') format('truetype');
+        font-family: 'EuroMachina';
+        src: url('<c:url value='/css/lesson24/EuroMachina.ttf'/>') format('truetype');
     }
 
     body {

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="by.teachmeskills.lesson23.utils.FileUtils" %>
 <%@ page import="java.util.List" %>
 <%@ page import="by.teachmeskills.lesson23.LibraryServlet" %>
@@ -5,8 +6,8 @@
 <html>
 <head>
     <title>Библиотека</title>
-    <link rel="stylesheet" type="text/css" href="css/library.css?v=4">
-    <script src="js/library.js"></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/lesson23/library.css"/>?v=5">
+    <script src="<c:url value="/js/lesson23/library.js"/>"></script>
 </head>
 <body>
 <div class="library">

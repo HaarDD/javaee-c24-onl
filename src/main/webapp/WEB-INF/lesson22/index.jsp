@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: administrator
-  Date: 20.10.2023
-  Time: 22:29
-  To change this template use File | Settings | File Templates.
---%>
 <html>
 <body>
 <h2>Hello World!</h2>

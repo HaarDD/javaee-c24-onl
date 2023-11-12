@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="by.teachmeskills.lesson24.SuperHeroCard" %>
 <%@ page import="static by.teachmeskills.lesson24.SuperHeroesServlet.superHeroCardList" %>
 <%@ page import="java.io.File" %>
@@ -6,7 +7,7 @@
 
 <head>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="css/lesson24/superheroes.css">
+    <link rel="stylesheet" href="<c:url value="/css/lesson24/superheroes.css"/>">
     <title>Супергерои</title>
 </head>
 

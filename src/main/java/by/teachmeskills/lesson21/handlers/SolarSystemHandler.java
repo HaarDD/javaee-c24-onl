@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class SolarSystemHandler implements HttpHandler {
 
-    private static final String RESOURCE_LOCATION = "src/main/resources/pages/solar_system";
+    private static final String RESOURCE_LOCATION = "src/main/resources/lesson21/solar_system";
     private static final String DEFAULT_HTML_PAGE_PATH = "/solar_system.html";
     private static final Map<String, String> IMAGE_PATH_MAP = Map.of(
             "solar_system", "/images/Solar_System.jpg",
