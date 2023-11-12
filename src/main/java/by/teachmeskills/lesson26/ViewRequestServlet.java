@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@WebServlet(urlPatterns = "/repair-request")
-public class RepairRequestServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/view-request")
+public class ViewRequestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("lesson26/repair-request.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/lesson26/view-request.jsp").forward(request, response);
     }
 
 

@@ -1,10 +1,10 @@
-let select_service_tom_select = new TomSelect('#client-service', {
+let select_service_tom_select = new TomSelect('#clientService', {
     maxItems: 5
 });
 
-select_service_tom_select.wrapper.id = 'client-service';
+select_service_tom_select.wrapper.id = 'clientService';
 
-let select_address_tom_select = new TomSelect('#client-address', {
+let select_address_tom_select = new TomSelect('#clientAddress', {
     create: false,
     valueField: "display_name",
     labelField: "display_name",
@@ -21,27 +21,26 @@ let select_address_tom_select = new TomSelect('#client-address', {
     }
 });
 
-select_address_tom_select.wrapper.id = 'client-address';
+select_address_tom_select.wrapper.id = 'clientAddress';
 
-
-const site_redirect = window.location.origin + '/javaee_c24_onl_war_exploded/repair-request';
+const site_redirect = window.location.origin + '/javaee_c24_onl_war_exploded/view-request';
 
 const site = window.location.origin + '/javaee_c24_onl_war_exploded/save-request';
 
 const form = document.querySelector('#client-service-form');
-const client_first_name = document.querySelector('#client-first-name');
-const client_last_name = document.querySelector('#client-last-name');
-const client_personal_data_agree = document.querySelector('#client-personal-data-agree');
+const client_first_name = document.querySelector('#clientFirstName');
+const client_last_name = document.querySelector('#clientLastName');
+const client_personal_data_agree = document.querySelector('#clientPersonalDataAgree');
 form.addEventListener('submit', function (event) {
     event.preventDefault();
     event.stopPropagation();
 
     let formData = {
-        'client-first-name': client_first_name.value,
-        'client-last-name': client_last_name.value,
-        'client-address': select_address_tom_select.getValue(),
-        'client-personal-data-agree': client_personal_data_agree.checked,
-        'client-service': select_service_tom_select.getValue()
+        'clientFirstName': client_first_name.value,
+        'clientLastName': client_last_name.value,
+        'clientAddress': select_address_tom_select.getValue(),
+        'clientPersonalDataAgree': client_personal_data_agree.checked,
+        'clientService': select_service_tom_select.getValue()
     };
 
     fetch(site, {

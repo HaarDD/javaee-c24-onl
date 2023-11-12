@@ -1,12 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="by.teachmeskills.lesson26.SaveRequestServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="lesson26/css/tom-select.bootstrap5.css" rel="stylesheet">
-    <link href="lesson26/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<c:url value='/css/global/tom-select.bootstrap5.css'/>" rel="stylesheet">
+    <link href="<c:url value='/css/global/bootstrap.min.css'/>" rel="stylesheet">
     <title>Оставить заявку</title>
 </head>
 <body>
@@ -16,31 +17,31 @@
         <div class="col g-5">
             <form class="row g-3 needs-validation" id="client-service-form" novalidate>
                 <div class="col-md-5">
-                    <label for="client-first-name" class="form-label">Имя</label>
-                    <input type="text" class="form-control" id="client-first-name" required>
+                    <label for="clientFirstName" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="clientFirstName" required>
                     <div class="invalid-feedback">
                         Имя введено некорректно!
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <label for="client-last-name" class="form-label">Фамилия</label>
-                    <input type="text" class="form-control" id="client-last-name" required>
+                    <label for="clientLastName" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="clientLastName" required>
                     <div class="invalid-feedback">
                         Фамилия введена некорректно!
                     </div>
                 </div>
                 <div class="col-md-10">
-                    <label for="client-address" class="form-label">Адрес</label>
+                    <label for="clientAddress" class="form-label">Адрес</label>
 
-                    <select class="form-select" id="client-address" placeholder="Начните вводить адрес..."></select>
+                    <select class="form-select" id="clientAddress" placeholder="Начните вводить адрес..."></select>
 
                     <div class="invalid-feedback">
                         Выберите адрес!
                     </div>
                 </div>
                 <div class="col-md-10">
-                    <label for="client-service" class="form-label">Вид ремонта</label>
-                    <select class="form-select" id="client-service" multiple required placeholder="Выберите услугу...">
+                    <label for="clientService" class="form-label">Вид ремонта</label>
+                    <select class="form-select" id="clientService" multiple required placeholder="Выберите услугу...">
                         <c:forEach items="#{SaveRequestServlet.SERVICE_LIST}" var="item">
                             <option value="${item.key}">${item.value}</option>
                         </c:forEach>
@@ -51,9 +52,9 @@
                 </div>
                 <div class="col-12">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="client-personal-data-agree"
+                        <input class="form-check-input" type="checkbox" value="" id="clientPersonalDataAgree"
                                required>
-                        <label class="form-check-label" for="client-personal-data-agree">
+                        <label class="form-check-label" for="clientPersonalDataAgree">
                             Согласен с обработкой Персональных данных
                         </label>
                         <div class="invalid-feedback">
@@ -68,8 +69,8 @@
         </div>
     </div>
 </div>
-<script src="lesson26/js/bootstrap.bundle.min.js"></script>
-<script src="lesson26/js/tom-select.complete.min.js"></script>
-<script src="lesson26/js/script.js"></script>
+<script src="<c:url value='/js/global/bootstrap.bundle.min.js'/>"></script>
+<script src="<c:url value='/js/global/tom-select.complete.min.js'/>"></script>
+<script src="<c:url value='/js/lesson26/script.js'/>"></script>
 </body>
 </html>

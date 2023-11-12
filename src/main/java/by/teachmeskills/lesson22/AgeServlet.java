@@ -14,7 +14,7 @@ public class AgeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/age.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/lesson22/age.jsp").forward(request, response);
     }
 
     @Override

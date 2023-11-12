@@ -22,14 +22,14 @@ public class RequestLoggingFilter implements Filter {
 
     private static final String LOG_FILE_NAME = "log_" + LOG_FILE_DATE_FORMAT.format(new Date()) + ".txt";
 
-    private static final String LOG_PATH = "/storage/logs";
+    private static final String LOG_PATH = "WEB-INF/lesson23/storage/logs";
 
     private File logFile;
     private FileWriter logFileWriter;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        File logsDirectory = new File(filterConfig.getServletContext().getRealPath("/storage/logs"));
+        File logsDirectory = new File(filterConfig.getServletContext().getRealPath(LOG_PATH));
 
         if (!logsDirectory.exists()) {
             boolean created = logsDirectory.mkdirs();

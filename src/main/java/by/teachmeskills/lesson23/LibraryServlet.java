@@ -13,11 +13,11 @@ public class LibraryServlet extends HttpServlet {
 
     public static final String BOOK_NAME_PARAMETER = "book";
 
-    public static final String BOOK_STORAGE_PATH = "storage/books/";
+    public static final String BOOK_STORAGE_PATH = "WEB-INF/lesson23/storage/books/";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/library.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/lesson23/library.jsp").forward(request, response);
     }
 
 }

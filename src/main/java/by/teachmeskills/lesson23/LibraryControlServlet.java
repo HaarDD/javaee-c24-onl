@@ -64,6 +64,7 @@ public class LibraryControlServlet extends HttpServlet {
         if (filePart != null) {
             String fileName = filePart.getSubmittedFileName();
             if (fileName != null && !fileName.isEmpty()) {
+                System.out.println(getServletContext().getRealPath(BOOK_STORAGE_PATH) + fileName);
                 for (Part part : request.getParts()) {
                     part.write(getServletContext().getRealPath(BOOK_STORAGE_PATH) + fileName);
                 }
