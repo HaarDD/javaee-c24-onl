@@ -32,7 +32,7 @@ public class RepairRequest {
     private List<String> clientService;
 
     @IgnoreField
-    public static Map<String, String> REPAIR_REQUEST_FIELDS_CYR_NAMES = Map.of(
+    public static final Map<String, String> REPAIR_REQUEST_FIELDS_CYR_NAMES = Map.of(
             "requestSessionId", "Id сессии",
             "clientFirstName", "Имя",
             "clientLastName", "Фамилия",
