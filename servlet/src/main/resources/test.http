@@ -1,4 +1,4 @@
 POST http://localhost:8081/javaee_c24_onl_war_exploded/hello
 Content-Type: application/x-www-form-urlencoded
 
-name=Maxim
+name = Maxim

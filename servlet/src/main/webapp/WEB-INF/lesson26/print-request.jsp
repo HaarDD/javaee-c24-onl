@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="/WEB-INF/lesson26/tags/listtable.tld" prefix="lt" %>
+<%@ taglib uri="/list_table" prefix="lt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="static by.teachmeskills.lesson26.SaveRequestServlet.ATTRIBUTE_REPAIR_REQUEST" %>
 <html>

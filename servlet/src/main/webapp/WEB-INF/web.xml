@@ -8,7 +8,7 @@
     <jsp-config>
         <taglib>
             <taglib-uri>/print-objects-list-to-table</taglib-uri>
-            <taglib-location>/WEB-INF/lesson26/tags/listtable.tld</taglib-location>
+            <taglib-location>/META-INF/listtable.tld</taglib-location>
         </taglib>
     </jsp-config>
 </web-app>

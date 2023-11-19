@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson26.services.jstl_custom;
+package by.teachmeskills.lesson26.tag;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

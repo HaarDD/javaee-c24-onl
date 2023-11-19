@@ -1,6 +1,6 @@
 package by.teachmeskills.lesson26.dto;
 
-import by.teachmeskills.lesson26.services.jstl_custom.IgnoreField;
+import by.teachmeskills.lesson26.tag.IgnoreField;
 import by.teachmeskills.lesson26.validation.RequestValidationResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,18 +19,6 @@ import static by.teachmeskills.lesson26.validation.RequestValidator.*;
 @NoArgsConstructor
 public class RepairRequest {
 
-    private String requestSessionId;
-
-    private String clientFirstName;
-
-    private String clientLastName;
-
-    private String clientAddress;
-
-    private Boolean clientPersonalDataAgree;
-
-    private List<String> clientService;
-
     @IgnoreField
     public static final Map<String, String> REPAIR_REQUEST_FIELDS_CYR_NAMES = Map.of(
             "requestSessionId", "Id сессии",
@@ -41,6 +29,12 @@ public class RepairRequest {
             "clientService", "Услуги"
 
     );
+    private String requestSessionId;
+    private String clientFirstName;
+    private String clientLastName;
+    private String clientAddress;
+    private Boolean clientPersonalDataAgree;
+    private List<String> clientService;
 
     public RequestValidationResponse getRequestValidationResponse() {
         return new RequestValidationResponse(
