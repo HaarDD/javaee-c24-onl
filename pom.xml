@@ -18,6 +18,7 @@
         <lombok.version>1.18.30</lombok.version>
         <jstl.version>1.2</jstl.version>
         <jackson-databind.version>2.15.3</jackson-databind.version>
+        <jsp-api.version>2.2</jsp-api.version>
 
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     </properties>
@@ -43,6 +44,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>${jsp-api.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

@@ -49,6 +49,8 @@ public class SaveRequestServlet extends HttpServlet {
 
         RepairRequest repairRequest = objectMapper.readValue(json, RepairRequest.class);
 
+        repairRequest.setRequestSessionId(httpSession.getId());
+
         RequestValidationResponse requestValidationResponse = repairRequest.getRequestValidationResponse();
 
         response.setContentType("application/json");
