@@ -1,5 +1,7 @@
 package by.teachmeskills.lesson26.services.jstl_custom;
 
+import lombok.Setter;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -9,38 +11,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@Setter
 public class ListTableTag extends BodyTagSupport {
 
     private List<?> dataList;
 
-    private Map<String, String> fieldsTranslator;
+    private Map<String, String> fieldsTranslator = new HashMap<>();
 
-    private Map<String, String> listElementsTranslator;
+    private Map<String, String> listElementsTranslator = new HashMap<>();
 
-    private String tableClasses;
-
-    {
-        fieldsTranslator = new HashMap<>();
-        listElementsTranslator = new HashMap<>();
-        tableClasses = null;
-    }
-
-    public void setDataList(List<?> dataList) {
-        this.dataList = dataList;
-    }
-
-    public void setFieldsTranslator(Map<String, String> fieldsTranslator) {
-        this.fieldsTranslator = fieldsTranslator;
-    }
-
-    public void setListElementsTranslator(Map<String, String> listElementsTranslator) {
-        this.listElementsTranslator = listElementsTranslator;
-    }
-
-    public void setTableClasses(String tableClasses) {
-        this.tableClasses = tableClasses;
-    }
-
+    private String tableClasses = null;
 
     @Override
     public int doStartTag() throws JspException {
@@ -94,9 +75,7 @@ public class ListTableTag extends BodyTagSupport {
             StringBuilder listData = new StringBuilder();
             listValue.forEach(elem -> listData.append(listElementsTranslator.getOrDefault(elem.toString(), elem.toString())).append(", "));
             value = listData.substring(0, listData.length() - 2);
-        }
-
-        if (value instanceof Boolean) {
+        } else if (value instanceof Boolean) {
             value = (Boolean) value ? "✓" : "×";
         }
 
