@@ -1,4 +1,4 @@
 .idea
 out
 target
-src/main/resources/pages/**/**/images/
+servlet/src/main/resources/pages/**/**/images/

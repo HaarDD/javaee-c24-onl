@@ -1,0 +1,35 @@
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>list_table</short-name>
+    <uri>/list_table</uri>
+
+    <description>JSTL Tag for Objects List print to Html Table</description>
+    <tag>
+        <name>listTable</name>
+        <tag-class>by.teachmeskills.lesson26.tag.ListTableTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>dataList</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.List</type>
+        </attribute>
+        <attribute>
+            <name>fieldsTranslator</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+        </attribute>
+        <attribute>
+            <name>listElementsTranslator</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+        </attribute>
+        <attribute>
+            <name>tableClasses</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+</taglib>
