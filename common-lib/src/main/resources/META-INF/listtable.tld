@@ -7,7 +7,7 @@
     <description>JSTL Tag for Objects List print to Html Table</description>
     <tag>
         <name>listTable</name>
-        <tag-class>by.teachmeskills.lesson26.services.jstl_custom.ListTableTag</tag-class>
+        <tag-class>by.teachmeskills.lesson26.tag.ListTableTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>dataList</name>
