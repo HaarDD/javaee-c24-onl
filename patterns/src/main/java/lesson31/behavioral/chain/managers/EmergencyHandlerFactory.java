@@ -24,6 +24,10 @@ public class EmergencyHandlerFactory {
             handlers[i].setNextServiceHandler(handlers[i + 1]);
         }
         //Возврат первого в цепочке
-        return handlers[0];
+        if (handlers.length > 0 && handlers[0] != null) {
+            return handlers[0];
+        } else {
+            throw new RuntimeException("Handler не определен!");
+        }
     }
 }
