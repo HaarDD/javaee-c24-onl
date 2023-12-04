@@ -13,6 +13,7 @@
         <module>common-lib</module>
         <module>servlet</module>
         <module>patterns</module>
+        <module>patterns-ee</module>
     </modules>
 
 </project>
