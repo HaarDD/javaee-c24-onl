@@ -20,6 +20,9 @@
         <jstl.version>1.2</jstl.version>
         <jackson-databind.version>2.15.3</jackson-databind.version>
         <jsp-api.version>2.2</jsp-api.version>
+        <log4j.version>1.2.16</log4j.version>
+        <junit-jupiter.version>5.9.3</junit-jupiter.version>
+
         <by.teachmeskills.common-lib.version>1.0.0</by.teachmeskills.common-lib.version>
 
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
@@ -54,10 +57,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>by.teachmeskills</groupId>
             <artifactId>common-lib</artifactId>
             <version>${by.teachmeskills.common-lib.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
