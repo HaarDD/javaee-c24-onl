@@ -17,18 +17,18 @@ public class DataUtils<T> {
 
     public static <T> List<T> getListFromAttributeDataSession(HttpSession session, String attributeName, Class<T> attributeListClass) {
         Object attributeValue = session.getAttribute(attributeName);
+        return getListFromAttribute(attributeValue, attributeListClass);
+    }
 
+    public static <T> List<T> getListFromAttribute(Object attributeValue, Class<T> attributeListClass) {
         if (attributeValue instanceof List<?> rawList) {
-
             for (Object item : rawList) {
                 if (!attributeListClass.isInstance(item)) {
                     return null;
                 }
             }
-
             return (List<T>) rawList;
         }
-
         return null;
     }
 

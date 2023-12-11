@@ -24,6 +24,7 @@ public class RequestValidator {
     }
 
     public static boolean isClientServiceValid(List<String> clientService) {
+        if (clientService == null) return false;
         return !clientService.isEmpty();
     }
 
