@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RequestValidationResponse {
+public class RequestValidationResponseOLD {
 
     private Boolean clientFirstName;
     private Boolean clientLastName;

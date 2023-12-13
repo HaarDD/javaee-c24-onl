@@ -3,7 +3,7 @@ package by.teachmeskills.lesson26.validation;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class RequestValidator {
+public class RequestValidatorOLD {
 
     public static final Pattern REGEX_PATTERN_NAME = Pattern.compile("^[A-Za-zА-Яа-я]+$");
 

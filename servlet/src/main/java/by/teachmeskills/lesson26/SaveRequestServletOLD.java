@@ -1,6 +1,5 @@
 package by.teachmeskills.lesson26;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,18 +15,18 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import by.teachmeskills.lesson26.validation.RequestValidationResponse;
+import by.teachmeskills.lesson26.validation.RequestValidationResponseOLD;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import by.teachmeskills.lesson26.dto.RepairRequest;
+import by.teachmeskills.lesson26.dto.RepairRequestOLD;
 
-import static by.teachmeskills.lesson26.services.DataUtils.*;
+import static by.teachmeskills.lesson26.services.DataUtilsOLD.*;
 
 
 @WebServlet(urlPatterns = "/save-request")
-public class SaveRequestServlet extends HttpServlet {
+public class SaveRequestServletOLD extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(SaveRequestServlet.class);
+    private static final Logger LOGGER = Logger.getLogger(SaveRequestServletOLD.class);
 
     public static final String ATTRIBUTE_REPAIR_REQUEST = "repair_request";
 
@@ -60,11 +59,11 @@ public class SaveRequestServlet extends HttpServlet {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        RepairRequest repairRequest = objectMapper.readValue(json, RepairRequest.class);
+        RepairRequestOLD repairRequest = objectMapper.readValue(json, RepairRequestOLD.class);
 
         repairRequest.setRequestSessionId(httpSession.getId());
 
-        RequestValidationResponse requestValidationResponse = repairRequest.getRequestValidationResponse();
+        RequestValidationResponseOLD requestValidationResponse = repairRequest.getRequestValidationResponse();
 
         response.setContentType("application/json");
         response.getWriter().print(objectMapper.writeValueAsString(requestValidationResponse));
@@ -75,7 +74,7 @@ public class SaveRequestServlet extends HttpServlet {
             return;
         }
 
-        List<RepairRequest> repairRequestList = getListFromAttributeDataSession(httpSession, ATTRIBUTE_REPAIR_REQUEST, RepairRequest.class);
+        List<RepairRequestOLD> repairRequestList = getListFromAttributeDataSession(httpSession, ATTRIBUTE_REPAIR_REQUEST, RepairRequestOLD.class);
 
         if (repairRequestList == null) {
             repairRequestList = new ArrayList<>();

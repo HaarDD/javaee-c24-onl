@@ -22,6 +22,7 @@
         <jsp-api.version>2.2</jsp-api.version>
         <log4j.version>1.2.16</log4j.version>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
+        <jbcrypt.version>0.4</jbcrypt.version>
 
         <by.teachmeskills.common-lib.version>1.0.0</by.teachmeskills.common-lib.version>
 
@@ -62,15 +63,35 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>${jbcrypt.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>by.teachmeskills</groupId>
-            <artifactId>common-lib</artifactId>
-            <version>${by.teachmeskills.common-lib.version}</version>
         </dependency>
 
     </dependencies>

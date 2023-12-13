@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class DataUtils<T> {
+public class DataUtilsOLD<T> {
 
     public static String readJsonFromRequest(HttpServletRequest request) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {

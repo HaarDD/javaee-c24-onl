@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @Setter
-public class ListTableTag extends BodyTagSupport {
+public class ListTableTagOLD extends BodyTagSupport {
 
     private List<?> dataList;
 
@@ -37,7 +37,7 @@ public class ListTableTag extends BodyTagSupport {
             Object firstElement = dataList.get(0);
 
             for (Field field : firstElement.getClass().getDeclaredFields()) {
-                if (!field.isAnnotationPresent(IgnoreField.class)) {
+                if (!field.isAnnotationPresent(IgnoreFieldOLD.class)) {
                     out.println("<th>" + fieldsTranslator.getOrDefault(field.getName(), field.getName()) + "</th>");
                 }
             }
@@ -49,7 +49,7 @@ public class ListTableTag extends BodyTagSupport {
                 out.println("<tr>");
 
                 for (Field field : data.getClass().getDeclaredFields()) {
-                    if (!field.isAnnotationPresent(IgnoreField.class)) {
+                    if (!field.isAnnotationPresent(IgnoreFieldOLD.class)) {
                         field.setAccessible(true);
                         Object value = getObject(data, field);
                         out.println("<td>" + value + "</td>");
