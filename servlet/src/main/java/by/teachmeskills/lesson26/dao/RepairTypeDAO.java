@@ -102,4 +102,27 @@ public abstract class RepairTypeDAO {
             log.error("Ошибка удаления типа ремонта: ", e);
         }
     }
+
+    public static RepairTypeDTO getRepairTypeByCode(String code) {
+        RepairTypeDTO repairType = new RepairTypeDTO();
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM repair_types WHERE code = ?")) {
+
+            statement.setString(1, code);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    repairType.setId(resultSet.getLong("id"));
+                    repairType.setCode(resultSet.getString("code"));
+                    repairType.setName(resultSet.getString("name"));
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("Ошибка получения типа ремонта по коду: ", e);
+        }
+
+        return repairType;
+    }
 }

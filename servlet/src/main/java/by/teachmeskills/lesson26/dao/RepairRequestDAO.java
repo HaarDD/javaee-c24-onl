@@ -20,6 +20,7 @@ abstract public class RepairRequestDAO {
     private static final String UPDATE_REPAIR_REQUEST = "UPDATE repair_request SET user_id = ?, session_id = ?, address = ? WHERE id = ?";
     private static final String DELETE_REPAIR_REQUEST = "DELETE FROM repair_request WHERE id = ?";
 
+
     private static final String SELECT_REPAIR_REQUESTS_BY_USER_EMAIL =
             "SELECT rr.* " +
                     "FROM repair_request rr " +

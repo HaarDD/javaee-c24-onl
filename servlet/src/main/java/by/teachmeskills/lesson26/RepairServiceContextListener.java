@@ -1,17 +1,15 @@
 package by.teachmeskills.lesson26;
 
-import by.teachmeskills.lesson26.dao.RepairTypeDAO;
-import by.teachmeskills.lesson26.dao.RoleDAO;
-import by.teachmeskills.lesson26.dao.UserDAO;
-import by.teachmeskills.lesson26.dto.RepairTypeDTO;
-import by.teachmeskills.lesson26.dto.RoleDTO;
-import by.teachmeskills.lesson26.dto.UserDTO;
+import by.teachmeskills.lesson26.dao.*;
+import by.teachmeskills.lesson26.dto.*;
 import by.teachmeskills.lesson26.services.DatabaseManager;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -29,6 +27,10 @@ public class RepairServiceContextListener implements ServletContextListener {
 
         initializeRepairTypes();
 
+        initializeRepairRequest();
+
+        soutRepairRequestsLog();
+
     }
 
     @Override
@@ -37,7 +39,6 @@ public class RepairServiceContextListener implements ServletContextListener {
     }
 
     private void initializeRolesAndUser() {
-
 
         //создание ролей
         RoleDTO adminRole = new RoleDTO();
@@ -83,5 +84,36 @@ public class RepairServiceContextListener implements ServletContextListener {
         log.info("Инициализация типов ремонта прошла успешно");
 
     }
+
+    private void initializeRepairRequest() {
+
+        RepairRequestDTO repairRequestDTO = new RepairRequestDTO();
+        repairRequestDTO.setUserId(UserDAO.getUserByEmail("admin").getId());
+        repairRequestDTO.setSessionId("сессия123");
+        repairRequestDTO.setAddress("Минск, Уручье");
+        RepairRequestDAO.createRepairRequest(repairRequestDTO);
+
+
+        RepairRequestRepairTypeDTO repairRequestRepairTypeDTO = new RepairRequestRepairTypeDTO();
+        Long previousRequestAddedId = RepairRequestDAO.getRepairRequestsByUserEmail("admin").get(0).getId();
+        repairRequestRepairTypeDTO.setRepairTypeId(RepairTypeDAO.getRepairTypeByCode("R_CL").getId());
+        repairRequestRepairTypeDTO.setRepairRequestId(previousRequestAddedId);
+
+        RepairRequestRepairTypeDAO.insertRepairRequestRepairType(repairRequestRepairTypeDTO);
+
+        repairRequestRepairTypeDTO.setRepairTypeId(RepairTypeDAO.getRepairTypeByCode("R_CPU").getId());
+        repairRequestRepairTypeDTO.setRepairRequestId(previousRequestAddedId);
+
+        RepairRequestRepairTypeDAO.insertRepairRequestRepairType(repairRequestRepairTypeDTO);
+
+    }
+
+    private void soutRepairRequestsLog() {
+        List<RepairRequestDetailsDTO> repairRequestDetailsList = RepairRequestDetailsDAO.getRepairRequestDetails();
+        log.info(Arrays.toString(repairRequestDetailsList.toArray()));
+        System.out.println(Arrays.toString(repairRequestDetailsList.toArray()));
+    }
+
+
 
 }
