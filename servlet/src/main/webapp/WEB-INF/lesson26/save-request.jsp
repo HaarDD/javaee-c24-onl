@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="by.teachmeskills.lesson26.SaveRequestServlet" %>
+<%@ page import="by.teachmeskills.lesson26.SaveRequestServletOLD" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -71,6 +71,6 @@
 </div>
 <script src="<c:url value='/js/global/bootstrap.bundle.min.js'/>"></script>
 <script src="<c:url value='/js/global/tom-select.complete.min.js'/>"></script>
-<script src="<c:url value='/js/lesson26/script.js'/>"></script>
+<script src="<c:url value='/js/lesson26/save-request-script.js'/>"></script>
 </body>
 </html>

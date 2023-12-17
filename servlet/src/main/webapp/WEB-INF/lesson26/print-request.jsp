@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/list_table" prefix="lt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="static by.teachmeskills.lesson26.SaveRequestServlet.ATTRIBUTE_REPAIR_REQUEST" %>
+<%@ page import="static by.teachmeskills.lesson26.SaveRequestServletOLD.ATTRIBUTE_REPAIR_REQUEST" %>
 <html>
 <head>
     <title>Печать заявок</title>

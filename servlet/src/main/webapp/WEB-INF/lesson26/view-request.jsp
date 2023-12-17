@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="by.teachmeskills.lesson26.SaveRequestServlet" %>
-<%@ page import="static by.teachmeskills.lesson26.SaveRequestServlet.ATTRIBUTE_REPAIR_REQUEST" %>
+<%@ page import="by.teachmeskills.lesson26.SaveRequestServletOLD" %>
+<%@ page import="static by.teachmeskills.lesson26.SaveRequestServletOLD.ATTRIBUTE_REPAIR_REQUEST" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
