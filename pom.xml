@@ -10,10 +10,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common-lib</module>
         <module>servlet</module>
         <module>patterns</module>
         <module>patterns-ee</module>
+        <module>common</module>
     </modules>
 
 </project>
