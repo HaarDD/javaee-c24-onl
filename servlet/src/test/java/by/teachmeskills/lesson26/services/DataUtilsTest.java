@@ -1,6 +1,6 @@
 package by.teachmeskills.lesson26.services;
 
-import by.teachmeskills.lesson26.dto.RepairRequest;
+import by.teachmeskills.lesson26.dto.RepairRequestOLD;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ class DataUtilsTest {
     void testGetListFromAttribute_ValidList() {
         List<String> testData = Arrays.asList("item1", "item2", "item3");
 
-        List<String> result = DataUtils.getListFromAttribute(testData, String.class);
+        List<String> result = DataUtilsOLD.getListFromAttribute(testData, String.class);
 
         assertNotNull(result);
         assertEquals(testData, result);
@@ -22,7 +22,7 @@ class DataUtilsTest {
 
     @Test
     void testGetRequestValidationResponse() {
-        RepairRequest repairRequest = new RepairRequest(
+        RepairRequestOLD repairRequest = new RepairRequestOLD(
                 "12345678910",
                 "Иван",
                 "Иванов",
@@ -31,9 +31,9 @@ class DataUtilsTest {
                 Arrays.asList("КОД1", "КОД2")
         );
 
-        List<RepairRequest> testData = Arrays.asList(repairRequest, repairRequest);
+        List<RepairRequestOLD> testData = Arrays.asList(repairRequest, repairRequest);
 
-        List<RepairRequest> result = DataUtils.getListFromAttribute(testData, RepairRequest.class);
+        List<RepairRequestOLD> result = DataUtilsOLD.getListFromAttribute(testData, RepairRequestOLD.class);
 
         assertEquals(testData, result);
     }

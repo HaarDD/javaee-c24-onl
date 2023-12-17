@@ -13,31 +13,31 @@ class RequestValidatorTest {
 
     @Test
     void testClientFirstNameValid() {
-        assertTrue(RequestValidator.isClientFirstNameValid("John"));
-        assertTrue(RequestValidator.isClientFirstNameValid("Иван"));
-        assertFalse(RequestValidator.isClientFirstNameValid(""));
-        assertFalse(RequestValidator.isClientFirstNameValid("123"));
+        assertTrue(RequestValidatorOLD.isClientFirstNameValid("John"));
+        assertTrue(RequestValidatorOLD.isClientFirstNameValid("Иван"));
+        assertFalse(RequestValidatorOLD.isClientFirstNameValid(""));
+        assertFalse(RequestValidatorOLD.isClientFirstNameValid("123"));
     }
 
     @Test
     void testClientLastNameValid() {
-        assertTrue(RequestValidator.isClientLastNameValid("Doe"));
-        assertTrue(RequestValidator.isClientLastNameValid("Петров"));
-        assertFalse(RequestValidator.isClientLastNameValid(""));
-        assertFalse(RequestValidator.isClientLastNameValid("123"));
+        assertTrue(RequestValidatorOLD.isClientLastNameValid("Doe"));
+        assertTrue(RequestValidatorOLD.isClientLastNameValid("Петров"));
+        assertFalse(RequestValidatorOLD.isClientLastNameValid(""));
+        assertFalse(RequestValidatorOLD.isClientLastNameValid("123"));
     }
 
     @Test
     void testClientAddressValid() {
-        assertTrue(RequestValidator.isClientAddressValid("123 Main St"));
-        assertFalse(RequestValidator.isClientAddressValid(""));
-        assertFalse(RequestValidator.isClientAddressValid("   "));
+        assertTrue(RequestValidatorOLD.isClientAddressValid("123 Main St"));
+        assertFalse(RequestValidatorOLD.isClientAddressValid(""));
+        assertFalse(RequestValidatorOLD.isClientAddressValid("   "));
     }
 
     @Test
     void testClientPersonalDataAgreeValid() {
-        assertTrue(RequestValidator.isClientPersonalDataAgreeValid(true));
-        assertFalse(RequestValidator.isClientPersonalDataAgreeValid(false));
+        assertTrue(RequestValidatorOLD.isClientPersonalDataAgreeValid(true));
+        assertFalse(RequestValidatorOLD.isClientPersonalDataAgreeValid(false));
     }
 
     @Test
@@ -46,8 +46,8 @@ class RequestValidatorTest {
         List<String> emptyServices = new ArrayList<>();
         List<String> nullServices = null;
 
-        assertTrue(RequestValidator.isClientServiceValid(validServices));
-        assertFalse(RequestValidator.isClientServiceValid(emptyServices));
-        assertFalse(RequestValidator.isClientServiceValid(nullServices));
+        assertTrue(RequestValidatorOLD.isClientServiceValid(validServices));
+        assertFalse(RequestValidatorOLD.isClientServiceValid(emptyServices));
+        assertFalse(RequestValidatorOLD.isClientServiceValid(nullServices));
     }
 }
