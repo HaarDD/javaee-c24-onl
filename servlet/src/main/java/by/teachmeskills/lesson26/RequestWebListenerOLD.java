@@ -4,11 +4,11 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import static by.teachmeskills.lesson26.SaveRequestServlet.SERVICE_LIST;
-import static by.teachmeskills.lesson26.dto.RepairRequest.REPAIR_REQUEST_FIELDS_CYR_NAMES;
+import static by.teachmeskills.lesson26.SaveRequestServletOLD.SERVICE_LIST;
+import static by.teachmeskills.lesson26.dto.RepairRequestOLD.REPAIR_REQUEST_FIELDS_CYR_NAMES;
 
 @WebListener
-public class RequestWebListener implements ServletContextListener {
+public class RequestWebListenerOLD implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
