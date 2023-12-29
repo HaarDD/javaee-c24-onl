@@ -10,11 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common</module>
-        <module>servlet</module>
-        <module>patterns</module>
-        <module>patterns-ee</module>
-        <module>spring</module>
+        <module>spring-mvc</module>
     </modules>
 
 </project>
