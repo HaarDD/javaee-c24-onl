@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BookAuthorDto {
-    private long bookId;
-    private long authorId;
+    private Long bookId;
+    private Long authorId;
 }
