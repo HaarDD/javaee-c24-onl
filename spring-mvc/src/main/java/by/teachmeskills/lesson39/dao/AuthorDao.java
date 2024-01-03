@@ -1,10 +1,8 @@
 package by.teachmeskills.lesson39.dao;
 
-import by.teachmeskills.lesson39.db.DatabaseManager;
+import by.teachmeskills.lesson39.dbservice.DatabaseManager;
 import by.teachmeskills.lesson39.dto.AuthorDto;
-import by.teachmeskills.lesson39.dto.BookDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,8 +48,10 @@ public class AuthorDao {
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_AUTHOR_BY_NAME_SQL)) {
             preparedStatement.setString(1, name);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.getString("name");
-                return resultSet.next();
+                if (resultSet.next()) {
+                    resultSet.getString("name");
+                    return true;
+                }
             }
         } catch (SQLException e) {
             log.error("Ошибка проверки существования автора: ", e);
