@@ -22,6 +22,7 @@
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <spring.version>5.3.27</spring.version>
         <jackson-databind.version>2.15.3</jackson-databind.version>
+        <hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
 
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <slf4j-api.version>1.7.36</slf4j-api.version>
@@ -78,16 +79,22 @@
             <version>8.0.33</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 
