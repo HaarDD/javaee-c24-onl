@@ -84,7 +84,7 @@ public class LibraryController {
         return "redirect:/books";
     }
 
-    @PostMapping(value = "/add_author", produces = "application/json;charset=UTF-8")
+/*    @PostMapping(value = "/add_author", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> addAuthor(@RequestParam("name") String name) {
         Map<String, Object> response = new HashMap<>();
@@ -100,7 +100,45 @@ public class LibraryController {
             response.put("message", "Failed to add author.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }*/
+
+
+    @RequestMapping("/authors")
+    public String showAuthors(Model model) {
+        model.addAttribute("authors", AuthorDao.getAllAuthors());
+        return "authors";
     }
 
+    @GetMapping("/get_author_info")
+    @ResponseBody
+    public ResponseEntity<AuthorDto> getAuthorInfoById(@RequestParam Long id) {
+        AuthorDto authorDto = AuthorDao.getAuthorById(id);
+
+        if (authorDto != null) {
+            return new ResponseEntity<>(authorDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/add_author", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResponseEntity<?> addAuthor(@ModelAttribute @Valid AuthorDto authorDto) {
+        AuthorDao.addAuthor(authorDto.getName());
+        return ResponseEntity.ok(Collections.emptyMap());
+    }
+
+    @PostMapping(value = "/edit_author", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResponseEntity<?> editAuthor(@ModelAttribute @Valid AuthorDto authorDto) {
+        AuthorDao.editAuthor(authorDto);
+        return ResponseEntity.ok(Collections.emptyMap());
+    }
+
+    @DeleteMapping("/delete_author")
+    public ResponseEntity<String> deleteAuthor(@RequestParam Long id) {
+        AuthorDao.deleteAuthorById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

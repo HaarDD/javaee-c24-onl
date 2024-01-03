@@ -15,12 +15,13 @@ import java.util.List;
 @Slf4j
 public class AuthorDao {
     private static final String INSERT_AUTHOR_SQL = "INSERT INTO author (name) VALUES (?)";
-    private static final String INSERT_BOOK_AUTHOR_SQL = "INSERT INTO book_author (bookId, authorId) VALUES (?, ?)";
     private static final String SELECT_ALL_AUTHORS_SQL = "SELECT * FROM author";
-    private static final String SELECT_BOOKS_BY_AUTHOR_SQL = "SELECT book.* FROM book JOIN book_author ON book.id = book_author.bookId WHERE book_author.authorId = ?";
     private static final String DELETE_AUTHOR_SQL = "DELETE FROM author WHERE id = ?";
 
     private static final String SELECT_AUTHOR_BY_NAME_SQL = "SELECT * FROM author WHERE name = ?";
+
+    private static final String SELECT_AUTHOR_BY_ID_SQL = "SELECT * FROM author WHERE id = ?";
+    private static final String UPDATE_AUTHOR_SQL = "UPDATE author SET name = ? WHERE id = ?";
 
     public static Long addAuthor(String name) {
         if (authorExists(name)) {
@@ -77,13 +78,42 @@ public class AuthorDao {
         return authors;
     }
 
-    public static void deleteAuthor(Long authorId) {
+    public static void deleteAuthorById(Long authorId) {
         try (Connection connection = DatabaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_AUTHOR_SQL)) {
             preparedStatement.setLong(1, authorId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             log.error("Ошибка удаления автора: ", e);
+        }
+    }
+
+    public static AuthorDto getAuthorById(Long authorId) {
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_AUTHOR_BY_ID_SQL)) {
+            preparedStatement.setLong(1, authorId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new AuthorDto(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Ошибка получения автора по идентификатору: ", e);
+        }
+        return null;
+    }
+
+    public static void editAuthor(AuthorDto authorDto) {
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_AUTHOR_SQL)) {
+            preparedStatement.setString(1, authorDto.getName());
+            preparedStatement.setLong(2, authorDto.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            log.error("Ошибка редактирования автора: ", e);
         }
     }
 }
