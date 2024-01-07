@@ -1,5 +1,4 @@
 // Модальное окно редактирования
-let editBookModal = $('#editBookModal');
 // Список провалидированных полей
 let validatedFields = [];
 
@@ -16,7 +15,7 @@ const editAuthorName = $('#edit-author-name');
 editAuthorModal.on('show.bs.modal', function (event) {
     // Очистка сообщений об ошибках
     $('.invalid-feedback').text('');
-
+    console.log("test");
     // Сброс стилей результатов валидации
     // Сброс стилей результатов валидации
     validatedFields.forEach(field => field.toggleClass("is-invalid"));
@@ -29,14 +28,15 @@ editAuthorModal.on('show.bs.modal', function (event) {
 
     if (isAddForm) {
         // Настройка формы для добавления автора (очистка и нейминг)
-        editAuthorForm[0].action = "/add_author";
+        editAuthorForm[0].action = "/api/author";
         editAuthorModalLabel.text('Добавление автора: ');
         editAuthorId.val('');
         editAuthorName.val('');
     } else {
         // Настройка формы для редактирования автора (установка значений автора с подгрузкой из бэка)
-        editAuthorForm[0].action = "/edit_author";
-        $.get('/get_author_info?id=' + authorId, function (response) {
+        editAuthorForm[0].action = "/api/author";
+
+        $.get('/api/author?id=' + authorId, function (response) {
             editAuthorModalLabel.text('Редактирование автора: ');
             editAuthorId.val(response.id);
             editAuthorName.val(response.name);
@@ -50,10 +50,10 @@ editAuthorModal.on('show.bs.modal', function (event) {
         // Очистка ранее непрошедших валидацию полей
         validatedFields.forEach(field => field.toggleClass("is-invalid"));
         validatedFields = [];
+        console.log($(this).serialize());
         $.ajax({
-            type: "POST",
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
+            type: isAddForm ? "POST" : "PUT",
+            url: $(this).attr('action') + '?' + $(this).serialize(),
             success: function (response) {
                 // Перезагрузка страницы в случае 200-го кода
                 window.location.reload();
@@ -83,10 +83,8 @@ let deleteAuthorButton = $('#deleteAuthorButton');
 deleteAuthorModal.on('show.bs.modal', function (event) {
     let button = $(event.relatedTarget);
     let authorId = button.data('author-id');
-    // Получание имени удаляемого автора с бэка (для надежности :) )
-    $.get('/get_author_info?id=' + authorId, function (response) {
-        $('#deleteAuthorName').text(response.name);
-    });
+    // Размещение имени удаляемого автора
+    $('#deleteAuthorName').text(button.prev().text());
 
     // Обработчик кнопки удаления
     deleteAuthorButton.off('click').on('click', function () {
@@ -97,7 +95,7 @@ deleteAuthorModal.on('show.bs.modal', function (event) {
 // Функция удаления автора
 function deleteAuthor(authorId) {
     $.ajax({
-        url: '/delete_author?id=' + authorId,
+        url: '/api/author?id=' + authorId,
         type: 'DELETE',
         success: function () {
             window.location.reload();

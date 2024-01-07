@@ -1,8 +1,9 @@
-package by.teachmeskills.lesson39.dto;
+package by.teachmeskills.lesson41.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.ISBN;
 
 import javax.validation.constraints.Max;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain=true)
 public class BookDto {
 
     private Long id;

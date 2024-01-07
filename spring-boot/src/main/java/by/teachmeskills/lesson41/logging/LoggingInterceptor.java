@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson39.logging;
+package by.teachmeskills.lesson41.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;

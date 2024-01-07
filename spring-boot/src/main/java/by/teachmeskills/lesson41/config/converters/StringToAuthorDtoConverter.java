@@ -1,8 +1,8 @@
-package by.teachmeskills.lesson39.config.converters;
+package by.teachmeskills.lesson41.config.converters;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.Formatter;
-import by.teachmeskills.lesson39.dto.AuthorDto;
+import by.teachmeskills.lesson41.dto.AuthorDto;
 
 import java.text.ParseException;
 import java.util.Locale;

@@ -1,8 +1,10 @@
-package by.teachmeskills.lesson39.dbservice;
+package by.teachmeskills.lesson41.dbservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,30 +17,18 @@ import java.sql.SQLException;
 @Service
 public class DatabaseManager {
     private static final BasicDataSource dataSource = new BasicDataSource();
-    private static final String CONFIG_FILE_PATH = "dbconf/database-config.json";
-    private static DatabaseConfig databaseConfig;
 
-    private DatabaseManager() {
-        configureDataSource();
-        createDatabase();
+    @Autowired
+    public DatabaseManager(DataSourceProperties dataSourceProperties) {
+        configureDataSource(dataSourceProperties);
+        createDatabase(dataSourceProperties);
     }
 
-    private static void configureDataSource() {
-        try (InputStream inputStream = DatabaseManager.class.getClassLoader().getResourceAsStream(CONFIG_FILE_PATH)) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            databaseConfig = objectMapper.readValue(inputStream, DatabaseConfig.class);
-
-            configureDataSourceFromConfig(databaseConfig);
-        } catch (IOException e) {
-            log.error("Ошибка чтения файла конфигурации базы данных: ", e);
-        }
-    }
-
-    private static void configureDataSourceFromConfig(DatabaseConfig config) {
-        dataSource.setDriverClassName(config.getDriverClassName());
-        dataSource.setUrl(config.getUrl());
-        dataSource.setUsername(config.getUser());
-        dataSource.setPassword(config.getPassword());
+    private static void configureDataSource(DataSourceProperties dataSourceProperties) {
+        dataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
+        dataSource.setUrl(dataSourceProperties.getUrl());
+        dataSource.setUsername(dataSourceProperties.getUsername());
+        dataSource.setPassword(dataSourceProperties.getPassword());
     }
 
     private static String CREATE_DATABASE_SQL = "CREATE DATABASE IF NOT EXISTS %s";
@@ -51,9 +41,9 @@ public class DatabaseManager {
 
     private static String CREATE_TABLE_BOOK_AUTHOR_SQL = "CREATE TABLE IF NOT EXISTS book_author (bookid INT NOT NULL, authorid INT NOT NULL, PRIMARY KEY (bookid, authorid), FOREIGN KEY (authorid) REFERENCES author(id) ON DELETE CASCADE, FOREIGN KEY (bookid) REFERENCES book(id) ON DELETE CASCADE)";
 
-    public static void createDatabase() {
+    public static void createDatabase(DataSourceProperties dataSourceProperties) {
         try (Connection connection = getConnection()) {
-            createOrUseDatabase(connection, databaseConfig.getDatabaseName());
+            createOrUseDatabase(connection, dataSourceProperties.getName());
             createTableBook(connection);
             createTableAuthor(connection);
             createTableBookAuthor(connection);
