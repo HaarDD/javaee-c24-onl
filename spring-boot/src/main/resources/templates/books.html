@@ -1,11 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="<c:url value='/css/global/tom-select.bootstrap5.css'/>" rel="stylesheet">
-    <link href="<c:url value='/css/global/bootstrap.min.css'/>" rel="stylesheet">
+    <link th:href="@{/css/global/tom-select.bootstrap5.css}" rel="stylesheet">
+    <link th:href="@{/css/global/bootstrap.min.css}" rel="stylesheet">
     <title>Каталог библиотеки</title>
 </head>
 <body>
@@ -16,32 +14,28 @@
     </button>
 
     <div class="row">
-        <c:forEach var="book" items="${books}">
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">${book.name}</h5>
-                        <p class="card-text">Авторы:
-                            <c:forEach var="author" items="${book.authors}" varStatus="loop">
-                                ${author.name}<c:if test="${not loop.last}">, </c:if>
-                            </c:forEach>
-                        </p>
-                        <p class="card-text">Описание: ${book.description}</p>
-                        <p class="card-text">ISBN: ${book.isbn}</p>
-                        <p class="card-text">Кол-во страниц: ${book.pages}</p>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#deleteBookModal" data-book-id="${book.id}">
-                            Удалить
-                        </button>
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#editBookModal" data-book-id="${book.id}">
-                            Редактировать
-                        </button>
-                    </div>
+        <div th:each="book : ${books}" class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.name}"></h5>
+                    <p class="card-text">Авторы:
+                        <span th:each="author : ${book.authors}" th:text="${author.name}"
+                              th:if="${not #lists.isEmpty(book.authors)}">, </span>
+                    </p>
+                    <p class="card-text" th:text="${book.description}"></p>
+                    <p class="card-text" th:text="${book.isbn}"></p>
+                    <p class="card-text" th:text="${book.pages}"></p>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteBookModal" th:data-book-id="${book.id}">
+                        Удалить
+                    </button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                            data-bs-target="#editBookModal" th:data-book-id="${book.id}">
+                        Редактировать
+                    </button>
                 </div>
             </div>
-
-        </c:forEach>
+        </div>
     </div>
 </div>
 
@@ -50,39 +44,38 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editBookModalLabel"></h5>
+                <h5 class="modal-title" id="editBookModalLabel">Редактировать книгу</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" id="editBookForm">
-                    <input type="hidden" name="id" id="edit-book-id">
+                <form th:action="@{/edit_book}" method="post" id="editBookForm">
+                    <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+                    <input type="hidden" th:name="id" id="edit-book-id">
                     <div class="mb-3">
                         <label for="edit-name" class="form-label">Название</label>
-                        <input type="text" class="form-control" id="edit-name" name="name" required>
+                        <input type="text" class="form-control" id="edit-name" th:name="name" required>
                         <div id="nameErrorLabel" class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3">
                         <label for="authorIds" class="form-label">Авторы</label>
-                        <select class="form-select" id="authorIds" name="authors" multiple>
-                            <c:forEach items="${authors}" var="author">
-                                <option value="${author.id}">${author.name}</option>
-                            </c:forEach>
+                        <select class="form-select" id="authorIds" th:name="authors" multiple>
+                            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
                         </select>
                         <div id="authorsErrorLabel" class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3">
                         <label for="edit-description" class="form-label">Описание</label>
-                        <textarea class="form-control" id="edit-description" name="description" rows="3" required></textarea>
+                        <textarea class="form-control" id="edit-description" th:name="description" rows="3" required></textarea>
                         <div id="descriptionErrorLabel" class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3">
                         <label for="edit-isbn" class="form-label">ISBN</label>
-                        <input type="text" class="form-control" id="edit-isbn" name="isbn" required>
+                        <input type="text" class="form-control" id="edit-isbn" th:name="isbn" required>
                         <div id="isbnErrorLabel" class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3">
                         <label for="edit-pages" class="form-label">Страницы</label>
-                        <input type="text" class="form-control" id="edit-pages" name="pages" required>
+                        <input type="text" class="form-control" id="edit-pages" th:name="pages" required>
                         <div id="pagesErrorLabel" class="invalid-feedback"></div>
                     </div>
                     <button type="submit" class="btn btn-warning">Сохранить изменения</button>
@@ -110,17 +103,17 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <a href="#" class="btn btn-danger" id="deleteBookButton">Удалить</a>
+                <a class="btn btn-danger" id="deleteBookButton">Удалить</a>
             </div>
         </div>
     </div>
 </div>
 
 
-<script src="<c:url value='/js/global/jquery-3.7.1.min.js'/>"></script>
-<script src="<c:url value='/js/global/bootstrap.bundle.min.js'/>"></script>
-<script src="<c:url value='/js/global/tom-select.complete.min.js'/>"></script>
-<script src="<c:url value='/js/global/popper.min.js'/>"></script>
-<script src="<c:url value='/js/books.js'/>"></script>
+<script th:src="@{/js/global/jquery-3.7.1.min.js}"></script>
+<script th:src="@{/js/global/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/global/tom-select.complete.min.js}"></script>
+<script th:src="@{/js/global/popper.min.js}"></script>
+<script th:src="@{/js/books.js}"></script>
 </body>
 </html>
