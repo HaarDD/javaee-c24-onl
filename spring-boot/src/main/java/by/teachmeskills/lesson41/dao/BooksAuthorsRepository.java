@@ -1,8 +1,9 @@
-package by.teachmeskills.lesson39.dao;
+package by.teachmeskills.lesson41.dao;
 
-import by.teachmeskills.lesson39.dto.AuthorDto;
-import by.teachmeskills.lesson39.dto.BookAuthorDto;
+import by.teachmeskills.lesson41.dto.AuthorDto;
+import by.teachmeskills.lesson41.dto.BookAuthorDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class BookAuthorDao {
+@Repository
+public class BooksAuthorsRepository {
     private static final String INSERT_BOOK_AUTHOR_SQL = "INSERT INTO book_author (bookId, authorId) VALUES (?, ?)";
     private static final String SELECT_AUTHORS_FOR_BOOK = "SELECT author.* FROM author JOIN book_author ON author.id = book_author.authorId WHERE book_author.bookId = ?";
     private static final String DELETE_BOOK_AUTHOR_RELATIONSHIP_SQL = "DELETE FROM book_author WHERE bookId = ? AND authorId = ?";
 
-    public static void addBookAuthorRelationship(Connection connection, BookAuthorDto bookAuthorDto) {
+    public void addBookAuthorRelationship(Connection connection, BookAuthorDto bookAuthorDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOOK_AUTHOR_SQL)) {
             preparedStatement.setLong(1, bookAuthorDto.getBookId());
             preparedStatement.setLong(2, bookAuthorDto.getAuthorId());
@@ -27,7 +29,7 @@ public class BookAuthorDao {
         }
     }
 
-    public static void removeBookAuthorRelationship(Connection connection, BookAuthorDto bookAuthorDto) {
+    public void removeBookAuthorRelationship(Connection connection, BookAuthorDto bookAuthorDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BOOK_AUTHOR_RELATIONSHIP_SQL)) {
             preparedStatement.setLong(1, bookAuthorDto.getBookId());
             preparedStatement.setLong(2, bookAuthorDto.getAuthorId());
@@ -37,7 +39,7 @@ public class BookAuthorDao {
         }
     }
 
-    public static List<AuthorDto> getAuthorsForBook(Connection connection, long bookId) {
+    public List<AuthorDto> getAuthorsForBook(Connection connection, long bookId) {
         List<AuthorDto> authors = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(SELECT_AUTHORS_FOR_BOOK)) {
