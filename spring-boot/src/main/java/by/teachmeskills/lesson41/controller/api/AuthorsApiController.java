@@ -8,7 +8,7 @@ import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/author")
 public class AuthorsApiController {
@@ -31,13 +31,12 @@ public class AuthorsApiController {
     private final AuthorsRepository authorsRepository;
 
     @GetMapping("/all")
-    @ResponseBody
-    public List<AuthorDto> getAuthorsByIds() {
+    public ResponseEntity<List<AuthorDto>> getAuthorsByIds() {
         List<AuthorDto> authorDtoList = authorsRepository.getAllAuthors();
         if (authorDtoList.isEmpty()) {
             throw new ResourceNotFoundException("Автор(ы) не найден(ы)!");
         }
-        return authorDtoList;
+        return ResponseEntity.ok(authorDtoList);
     }
 
     @GetMapping("/exist")
@@ -48,10 +47,9 @@ public class AuthorsApiController {
     }
 
     @GetMapping
-    @ResponseBody
-    public AuthorDto getAuthorById(@RequestParam Long id) {
-        return authorsRepository.getAuthorById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Автор с id %s не найден!".formatted(id)));
+    public ResponseEntity<AuthorDto> getAuthorById(@RequestParam Long id) {
+        return ResponseEntity.ok(authorsRepository.getAuthorById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Автор с id %s не найден!".formatted(id))));
     }
 
     @PostMapping
