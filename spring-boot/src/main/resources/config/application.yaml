@@ -10,5 +10,9 @@ spring:
 logging:
   level:
     root: info
+    org:
+      springframework:
+        jdbc:
+          core: TRACE
   interceptor:
     enabled: false
