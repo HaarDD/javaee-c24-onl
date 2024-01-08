@@ -32,8 +32,8 @@ public class AuthorsApiController {
 
     @GetMapping("/all")
     @ResponseBody
-    public List<AuthorDto> getAuthorsByIds(@RequestParam(required = false) List<Long> id) {
-        List<AuthorDto> authorDtoList = authorsRepository.getAuthorsByIds(id);
+    public List<AuthorDto> getAuthorsByIds() {
+        List<AuthorDto> authorDtoList = authorsRepository.getAllAuthors();
         if (authorDtoList.isEmpty()) {
             throw new ResourceNotFoundException("Автор(ы) не найден(ы)!");
         }
