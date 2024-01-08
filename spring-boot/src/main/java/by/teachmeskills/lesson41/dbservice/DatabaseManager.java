@@ -19,16 +19,12 @@ public class DatabaseManager {
 
     @Autowired
     public DatabaseManager(DataSourceProperties dataSourceProperties) {
-        configureDataSource(dataSourceProperties);
-        createDatabase(dataSourceProperties);
-    }
-
-    private void configureDataSource(DataSourceProperties dataSourceProperties) {
-        dataSource.setUrl(dataSourceProperties.getUrl() + dataSourceProperties.getName());
+        dataSource.setUrl(dataSourceProperties.getUrl()/* + dataSourceProperties.getName()*/);
         dataSource.setDatabaseName(dataSourceProperties.getName());
         dataSource.setUser(dataSourceProperties.getUsername());
         dataSource.setPassword(dataSourceProperties.getPassword());
-
+        createDatabase(dataSourceProperties);
+        dataSource.setUrl(dataSourceProperties.getUrl() + dataSourceProperties.getName());
     }
 
     private static String CREATE_DATABASE_SQL = "CREATE DATABASE IF NOT EXISTS %s";
@@ -55,7 +51,7 @@ public class DatabaseManager {
     }
 
     private void createDatabase(Connection connection, String databaseName) throws SQLException {
-        executeUpdate(connection, String.format(USE_DATABASE_SQL, databaseName));
+        executeUpdate(connection, String.format(CREATE_DATABASE_SQL, databaseName));
     }
 
     private void useDatabase(Connection connection, String databaseName) throws SQLException {
