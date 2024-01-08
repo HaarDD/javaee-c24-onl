@@ -1,14 +1,12 @@
 package by.teachmeskills.lesson41.dbservice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.jdbc.MysqlDataSource;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,7 +14,8 @@ import java.sql.SQLException;
 @Slf4j
 @Service
 public class DatabaseManager {
-    private static final BasicDataSource dataSource = new BasicDataSource();
+    @Getter
+    private static final MysqlDataSource dataSource = new MysqlDataSource();
 
     @Autowired
     public DatabaseManager(DataSourceProperties dataSourceProperties) {
@@ -24,11 +23,12 @@ public class DatabaseManager {
         createDatabase(dataSourceProperties);
     }
 
-    private static void configureDataSource(DataSourceProperties dataSourceProperties) {
-        dataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
-        dataSource.setUrl(dataSourceProperties.getUrl());
-        dataSource.setUsername(dataSourceProperties.getUsername());
+    private void configureDataSource(DataSourceProperties dataSourceProperties) {
+        dataSource.setUrl(dataSourceProperties.getUrl() + dataSourceProperties.getName());
+        dataSource.setDatabaseName(dataSourceProperties.getName());
+        dataSource.setUser(dataSourceProperties.getUsername());
         dataSource.setPassword(dataSourceProperties.getPassword());
+
     }
 
     private static String CREATE_DATABASE_SQL = "CREATE DATABASE IF NOT EXISTS %s";
@@ -41,9 +41,10 @@ public class DatabaseManager {
 
     private static String CREATE_TABLE_BOOK_AUTHOR_SQL = "CREATE TABLE IF NOT EXISTS book_author (bookid INT NOT NULL, authorid INT NOT NULL, PRIMARY KEY (bookid, authorid), FOREIGN KEY (authorid) REFERENCES author(id) ON DELETE CASCADE, FOREIGN KEY (bookid) REFERENCES book(id) ON DELETE CASCADE)";
 
-    public static void createDatabase(DataSourceProperties dataSourceProperties) {
+    private void createDatabase(DataSourceProperties dataSourceProperties) {
         try (Connection connection = getConnection()) {
-            createOrUseDatabase(connection, dataSourceProperties.getName());
+            createDatabase(connection, dataSourceProperties.getName());
+            useDatabase(connection, dataSourceProperties.getName());
             createTableBook(connection);
             createTableAuthor(connection);
             createTableBookAuthor(connection);
@@ -53,38 +54,33 @@ public class DatabaseManager {
         }
     }
 
-    private static void createOrUseDatabase(Connection connection, String databaseName) throws SQLException {
-        executeUpdate(connection, String.format(CREATE_DATABASE_SQL, databaseName));
+    private void createDatabase(Connection connection, String databaseName) throws SQLException {
         executeUpdate(connection, String.format(USE_DATABASE_SQL, databaseName));
     }
 
-    private static void createTableBook(Connection connection) throws SQLException {
+    private void useDatabase(Connection connection, String databaseName) throws SQLException {
+        executeUpdate(connection, String.format(USE_DATABASE_SQL, databaseName));
+    }
+
+    private void createTableBook(Connection connection) throws SQLException {
         executeUpdate(connection, CREATE_TABLE_BOOK_SQL);
     }
 
-    private static void createTableAuthor(Connection connection) throws SQLException {
+    private void createTableAuthor(Connection connection) throws SQLException {
         executeUpdate(connection, CREATE_TABLE_AUTHOR_SQL);
     }
 
-    private static void createTableBookAuthor(Connection connection) throws SQLException {
+    private void createTableBookAuthor(Connection connection) throws SQLException {
         executeUpdate(connection, CREATE_TABLE_BOOK_AUTHOR_SQL);
     }
 
-    private static void executeUpdate(Connection connection, String sql) throws SQLException {
+    private void executeUpdate(Connection connection, String sql) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
         }
     }
 
-    public static void closeDataSource() {
-        try {
-            dataSource.close();
-        } catch (SQLException e) {
-            log.error("Ошибка закрытия соединения", e);
-        }
-    }
-
-    public static Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 }
