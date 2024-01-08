@@ -6,11 +6,16 @@ import by.teachmeskills.lesson41.dto.BookAuthorDto;
 import by.teachmeskills.lesson41.dto.BookDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,24 +25,75 @@ import java.util.Optional;
 public class BooksRepository {
 
     private final BooksAuthorsRepository booksAuthorsRepository;
-    private static final String INSERT_BOOK_SQL = "INSERT INTO book (name, description, isbn, pages) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_BOOK_SQL = "INSERT INTO book (name, description, isbn, pages) VALUES (:name, :description, :isbn, :pages)";
     private static final String SELECT_ALL_BOOKS_SQL = "SELECT * FROM book";
-    private static final String SELECT_BOOK_BY_ID_SQL = "SELECT * FROM book WHERE id = ?";
-    private static final String EDIT_BOOK_BY_ID_SQL = "UPDATE book SET name=?, description=?, isbn=?, pages=? WHERE id=?";
-    private static final String DELETE_BOOK_BY_ID_SQL = "DELETE FROM book WHERE id = ?";
+    private static final String SELECT_BOOK_BY_ID_SQL = "SELECT * FROM book WHERE id = :id";
+    private static final String EDIT_BOOK_BY_ID_SQL = "UPDATE book SET name=:name, description=:description, isbn=:isbn, pages=:pages WHERE id=:id";
+    private static final String DELETE_BOOK_BY_ID_SQL = "DELETE FROM book WHERE id = :id";
+
+    private static final String SELECT_FILTERED_BOOKS_SQL =
+            "SELECT book.* " +
+                    "FROM book " +
+                    "LEFT JOIN book_author ON book.id = book_author.bookId " +
+                    "LEFT JOIN author ON book_author.authorId = author.id " +
+                    "WHERE (:searchText IS NULL OR " +
+                    "(:searchType = 'name' AND  LOWER(book.name) LIKE LOWER(CONCAT('%', :searchText, '%'))) OR " +
+                    "(:searchType = 'description' AND LOWER(book.description) LIKE LOWER(CONCAT('%', :searchText, '%'))) OR " +
+                    "(:searchType = 'isbn' AND LOWER(book.isbn) LIKE LOWER(CONCAT('%', :searchText, '%')))) " +
+                    "AND (:authorSelectIsNull IS NULL OR author.id IN (:authorSelect)) " +
+                    "AND (:pagesFrom IS NULL OR book.pages > :pagesFrom) " +
+                    "AND (:pagesTo IS NULL OR book.pages < :pagesTo)";
+
+    public List<BookDto> getFilteredBooks(String searchText, String searchType, List<Long> authorSelect, Long pagesFrom, Long pagesTo) {
+        List<BookDto> filteredBooks = new ArrayList<>();
+
+        try {
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("searchText", searchText, Types.VARCHAR, "VARCHAR");
+            parameters.addValue("searchType", searchType, Types.VARCHAR, "VARCHAR");
+            parameters.addValue("authorSelectIsNull", authorSelect!=null ? "NOT_NULL" : null);
+            parameters.addValue("authorSelect", authorSelect);
+            parameters.addValue("pagesFrom", pagesFrom, Types.INTEGER, "INT");
+            parameters.addValue("pagesTo", pagesTo, Types.INTEGER, "INT");
+
+            NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DatabaseManager.getDataSource());
+
+            filteredBooks = jdbcTemplate.query(SELECT_FILTERED_BOOKS_SQL, parameters, (resultSet, rowNum) ->
+                    new BookDto()
+                            .setId(resultSet.getLong("id"))
+                            .setName(resultSet.getString("name"))
+                            .setIsbn(resultSet.getString("isbn"))
+                            .setPages(resultSet.getLong("pages"))
+                            .setDescription(resultSet.getString("description"))
+            );
+
+            filteredBooks.forEach(book -> {
+                try {
+                    book.setAuthors(booksAuthorsRepository.getAuthorsForBook(book.getId()));
+                } catch (Exception e) {
+                    log.error("Не удалось проставить авторов книге: {}", book);
+                }
+            });
+
+            return filteredBooks;
+
+        } catch (Exception e) {
+            log.error("Ошибка при получении отфильтрованного списка книг: ", e);
+        }
+
+        return filteredBooks;
+    }
 
     public List<BookDto> getAllBooks() {
         List<BookDto> books = new ArrayList<>();
 
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOKS_SQL);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                books.add(fillBookData(resultSet, connection));
-            }
-            log.info("Книги отправлены: {}", Arrays.toString(books.stream().map(BookDto::getId).toArray()));
-        } catch (SQLException e) {
+        try {
+            NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DatabaseManager.getDataSource());
+            books = jdbcTemplate.query(SELECT_ALL_BOOKS_SQL, (resultSet, rowNum) ->
+                    fillBookData(resultSet)
+            );
+            log.info("Книги отправлены: {}", books.stream().map(BookDto::getId).toArray());
+        } catch (Exception e) {
             log.error("Ошибка при получении списка книг: ", e);
         }
 
@@ -45,77 +101,63 @@ public class BooksRepository {
     }
 
     public Optional<BookDto> addBook(BookDto bookDto) {
-        try (Connection connection = DatabaseManager.getConnection()) {
-            connection.setAutoCommit(false);
+        try {
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("name", bookDto.getName());
+            parameters.addValue("description", bookDto.getDescription());
+            parameters.addValue("isbn", bookDto.getIsbn());
+            parameters.addValue("pages", bookDto.getPages());
 
-            try (PreparedStatement insertBookStatement = connection.prepareStatement(INSERT_BOOK_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                insertBookStatement.setString(1, bookDto.getName());
-                insertBookStatement.setString(2, bookDto.getDescription());
-                insertBookStatement.setString(3, bookDto.getIsbn());
-                insertBookStatement.setLong(4, bookDto.getPages());
-                insertBookStatement.executeUpdate();
+            NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DatabaseManager.getDataSource());
 
-                try (ResultSet generatedKeys = insertBookStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        long bookId = generatedKeys.getLong(1);
-                        bookDto.setId(bookId);
+            SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate())
+                    .withTableName("book")
+                    .usingGeneratedKeyColumns("id");
 
-                        bookDto.getAuthors().stream().map(AuthorDto::getId).forEach(authorId -> {
-                            booksAuthorsRepository.addBookAuthorRelationship(connection, new BookAuthorDto(bookId, authorId));
-                        });
+            Number bookId = simpleJdbcInsert.executeAndReturnKey(parameters);
+            bookDto.setId(bookId.longValue());
 
-                    } else {
-                        log.error("Ошибка при добавлении книги, не удалось получить сгенерированный ключ ");
-                    }
-                }
-                connection.commit();
-                return Optional.of(bookDto);
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Ошибка при добавлении книги: ", e);
-            }
-        } catch (SQLException e) {
-            log.error("Ошибка при получении соединения: ", e);
+            bookDto.getAuthors().stream().map(AuthorDto::getId).forEach(authorId -> {
+                booksAuthorsRepository.addBookAuthorRelationship(new BookAuthorDto(bookId.longValue(), authorId));
+            });
+
+            log.info("Книга добавлена: {}", bookDto.getId());
+            return Optional.of(bookDto);
+        } catch (DataAccessException e) {
+            log.error("Ошибка при добавлении книги: ", e);
         }
+
         return Optional.empty();
     }
 
     public Optional<BookDto> editBook(BookDto bookDto) {
-        try (Connection connection = DatabaseManager.getConnection()) {
-            connection.setAutoCommit(false);
+        try {
+            NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DatabaseManager.getDataSource());
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("name", bookDto.getName());
+            parameters.addValue("description", bookDto.getDescription());
+            parameters.addValue("isbn", bookDto.getIsbn());
+            parameters.addValue("pages", bookDto.getPages());
+            parameters.addValue("id", bookDto.getId());
 
-            try {
-                for (AuthorDto oldAuthor : booksAuthorsRepository.getAuthorsForBook(connection, bookDto.getId())) {
-                    booksAuthorsRepository.removeBookAuthorRelationship(connection, new BookAuthorDto(bookDto.getId(), oldAuthor.getId()));
-                }
+            jdbcTemplate.update(EDIT_BOOK_BY_ID_SQL, parameters);
 
-                for (AuthorDto newAuthor : bookDto.getAuthors()) {
-                    booksAuthorsRepository.addBookAuthorRelationship(connection, new BookAuthorDto(bookDto.getId(), newAuthor.getId()));
-                }
-
-                try (PreparedStatement updateBookStatement = connection.prepareStatement(EDIT_BOOK_BY_ID_SQL, Statement.RETURN_GENERATED_KEYS)) {
-                    updateBookStatement.setString(1, bookDto.getName());
-                    updateBookStatement.setString(2, bookDto.getDescription());
-                    updateBookStatement.setString(3, bookDto.getIsbn());
-                    updateBookStatement.setLong(4, bookDto.getPages());
-                    updateBookStatement.setLong(5, bookDto.getId());
-                    updateBookStatement.executeUpdate();
-                    ResultSet resultSet = updateBookStatement.getGeneratedKeys();
-                    if (resultSet.next()) {
-                        bookDto.setId(resultSet.getLong(1));
-                    }
-                }
-
-                connection.commit();
-                log.info("Книга изменена: {}", bookDto.getId());
-                return Optional.of(bookDto);
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Ошибка при редактировании книги: ", e);
+            // Добавление старых связей в Книги-Авторы
+            for (AuthorDto oldAuthor : booksAuthorsRepository.getAuthorsForBook(bookDto.getId())) {
+                booksAuthorsRepository.removeBookAuthorRelationship(new BookAuthorDto(bookDto.getId(), oldAuthor.getId()));
             }
-        } catch (SQLException e) {
-            log.error("Ошибка при получении соединения: ", e);
+
+            // Добавление новых связей в Книги-Авторы
+            for (AuthorDto newAuthor : bookDto.getAuthors()) {
+                booksAuthorsRepository.addBookAuthorRelationship(new BookAuthorDto(bookDto.getId(), newAuthor.getId()));
+            }
+
+            log.info("Книга изменена: {}", bookDto.getId());
+            return Optional.of(bookDto);
+        } catch (DataAccessException e) {
+            log.error("Ошибка при редактировании книги: ", e);
         }
+
         return Optional.empty();
     }
 
@@ -125,48 +167,47 @@ public class BooksRepository {
             log.warn("Книги с id \"{}\" не существует", bookId);
             return Optional.empty();
         }
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement deleteBookStatement = connection.prepareStatement(DELETE_BOOK_BY_ID_SQL)) {
-            connection.setAutoCommit(false);
 
-            try {
-                deleteBookStatement.setLong(1, bookId);
-                deleteBookStatement.executeUpdate();
-                connection.commit();
-                log.info("Книга удалена: {}", bookId);
-                return optionalDeletedBookDto;
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Ошибка при удалении книги: ", e);
-            }
-        } catch (SQLException e) {
-            log.error("Ошибка при получении соединения: ", e);
+        try {
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("id", bookId);
+
+            NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DatabaseManager.getDataSource());
+            jdbcTemplate.update(DELETE_BOOK_BY_ID_SQL, parameters);
+
+            log.info("Книга удалена: {}", bookId);
+            return optionalDeletedBookDto;
+        } catch (DataAccessException e) {
+            log.error("Ошибка при удалении книги: ", e);
         }
+
         return Optional.empty();
     }
 
     public Optional<BookDto> getBookById(long bookId) {
+        try {
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("id", bookId);
 
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_BOOK_BY_ID_SQL)) {
+            NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DatabaseManager.getDataSource());
+            List<BookDto> books = jdbcTemplate.query(SELECT_BOOK_BY_ID_SQL, parameters, (resultSet, rowNum) ->
+                    fillBookData(resultSet)
+            );
 
-            statement.setLong(1, bookId);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                Optional<BookDto> bookDtoOptional = Optional.of(fillBookData(resultSet, connection));
+            if (!books.isEmpty()) {
+                BookDto bookDto = books.get(0);
+                bookDto.setAuthors(booksAuthorsRepository.getAuthorsForBook(bookDto.getId()));
                 log.info("Данные книги отправлены: {}", bookId);
-                return bookDtoOptional;
+                return Optional.of(bookDto);
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error("Ошибка при получении книги по ID: ", e);
         }
 
         return Optional.empty();
     }
 
-    private BookDto fillBookData(ResultSet resultSet, Connection connection) throws SQLException {
+    private BookDto fillBookData(ResultSet resultSet) throws SQLException {
         long bookId = resultSet.getLong("id");
         return new BookDto()
                 .setId(bookId)
@@ -174,6 +215,6 @@ public class BooksRepository {
                 .setDescription(resultSet.getString("description"))
                 .setIsbn(resultSet.getString("isbn"))
                 .setPages(resultSet.getLong("pages"))
-                .setAuthors(booksAuthorsRepository.getAuthorsForBook(connection, bookId));
+                .setAuthors(booksAuthorsRepository.getAuthorsForBook(bookId));
     }
 }
