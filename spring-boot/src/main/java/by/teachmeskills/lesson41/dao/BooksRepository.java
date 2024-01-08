@@ -32,7 +32,7 @@ public class BooksRepository {
     private static final String DELETE_BOOK_BY_ID_SQL = "DELETE FROM book WHERE id = :id";
 
     private static final String SELECT_FILTERED_BOOKS_SQL =
-            "SELECT book.* " +
+            "SELECT DISTINCT book.* " +
                     "FROM book " +
                     "LEFT JOIN book_author ON book.id = book_author.bookId " +
                     "LEFT JOIN author ON book_author.authorId = author.id " +
@@ -49,8 +49,8 @@ public class BooksRepository {
 
         try {
             MapSqlParameterSource parameters = new MapSqlParameterSource();
-            parameters.addValue("searchText", searchText, Types.VARCHAR, "VARCHAR");
-            parameters.addValue("searchType", searchType, Types.VARCHAR, "VARCHAR");
+            parameters.addValue("searchText", searchText == null || searchText.isEmpty() ? null : searchText);
+            parameters.addValue("searchType", searchType == null || searchType.isEmpty() ? null : searchType);
             parameters.addValue("authorSelectIsNull", authorSelect!=null ? "NOT_NULL" : null);
             parameters.addValue("authorSelect", authorSelect);
             parameters.addValue("pagesFrom", pagesFrom, Types.INTEGER, "INT");
@@ -148,9 +148,12 @@ public class BooksRepository {
             }
 
             // Добавление новых связей в Книги-Авторы
-            for (AuthorDto newAuthor : bookDto.getAuthors()) {
-                booksAuthorsRepository.addBookAuthorRelationship(new BookAuthorDto(bookDto.getId(), newAuthor.getId()));
+            if (bookDto.getAuthors() != null) {
+                for (AuthorDto newAuthor : bookDto.getAuthors()) {
+                    booksAuthorsRepository.addBookAuthorRelationship(new BookAuthorDto(bookDto.getId(), newAuthor.getId()));
+                }
             }
+
 
             log.info("Книга изменена: {}", bookDto.getId());
             return Optional.of(bookDto);
