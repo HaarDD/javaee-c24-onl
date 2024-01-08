@@ -19,13 +19,17 @@ function createAuthorsFilterTomSelect(selector) {
             fetch("/api/author/all")
                 .then((response) => response.json())
                 .then((data) => {
-                    let json = data.map(function (author) {
-                        return {
-                            value: author.id,
-                            text: author.name
-                        };
-                    });
-                    callback(json);
+                    if (!data.statusCode) {
+                        let json = data.map(function (author) {
+                            return {
+                                value: author.id,
+                                text: author.name
+                            };
+                        });
+                        callback(json);
+                    } else {
+                        callback();
+                    }
                 });
         },
         // Перевод надписей
@@ -47,13 +51,17 @@ function createAuthorsFilterTomSelect(selector) {
                 fetch("/api/author/all")
                     .then((response) => response.json())
                     .then((data) => {
-                        let json = data.map(function (author) {
-                            return {
-                                value: author.id,
-                                text: author.name
-                            };
-                        });
-                        callback(json);
+                        if (!data.statusCode) {
+                            let json = data.map(function (author) {
+                                return {
+                                    value: author.id,
+                                    text: author.name
+                                };
+                            });
+                            callback(json);
+                        } else {
+                            callback();
+                        }
                     });
             },
             // Возможность создания автора
@@ -73,7 +81,7 @@ function createAuthorsFilterTomSelect(selector) {
             // Фильтр создания автора
             createFilter: function (input) {
                 input = input.toLowerCase();
-                return (!(input in this.options)) && input.length > 2;
+                return (!(input in this.options)) && input.length >= 2 && input.length <= 50;
             },
             // Перевод надписей
             render:{
