@@ -21,13 +21,7 @@ public class AuthorsMvcController {
 
     @GetMapping
     public String getAllAuthors(Model model) {
-
-
-
         List<AuthorDto> authorDtoList = authorsRepository.getAllAuthors();
-        if (authorDtoList.isEmpty()) {
-            throw new ResourceNotFoundException("Автор(ы) не найден(ы)!");
-        }
         model.addAttribute("authors",authorDtoList);
         return "author";
     }
