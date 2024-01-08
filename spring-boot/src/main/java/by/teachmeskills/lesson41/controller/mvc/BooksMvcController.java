@@ -30,8 +30,9 @@ public class BooksMvcController {
                             @RequestParam(required = false) List<Long> authorSelect,
                             @RequestParam(required = false) Long pagesFrom,
                             @RequestParam(required = false) Long pagesTo) {
-        //TODO переключать на другой запрос при пустых параметрах
-        List<BookDto> bookDtoList = booksRepository.getFilteredBooks(searchText,searchType,authorSelect,pagesFrom,pagesTo);
+        log.info("Параметры фильтрации: searchText: {},searchType: {}, authorSelect: {}, pagesFrom: {}, pagesTo: {}", searchText, searchType, authorSelect, pagesFrom, pagesTo);
+
+        List<BookDto> bookDtoList = booksRepository.getFilteredBooks(searchText, searchType, authorSelect, pagesFrom, pagesTo);
 
         model.addAttribute("books", bookDtoList);
         model.addAttribute("authors", authorsRepository.getAllAuthors());
