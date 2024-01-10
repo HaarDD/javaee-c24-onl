@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson41.dao;
+package by.teachmeskills.lesson41.repositories;
 
 import by.teachmeskills.lesson41.dbservice.DatabaseManager;
 import by.teachmeskills.lesson41.dto.AuthorDto;

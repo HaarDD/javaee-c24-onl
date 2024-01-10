@@ -27,15 +27,15 @@ public class DatabaseManager {
         dataSource.setUrl(dataSourceProperties.getUrl() + dataSourceProperties.getName());
     }
 
-    private static String CREATE_DATABASE_SQL = "CREATE DATABASE IF NOT EXISTS %s";
+    private static final String CREATE_DATABASE_SQL = "CREATE DATABASE IF NOT EXISTS %s";
 
-    private static String USE_DATABASE_SQL = "USE %s";
+    private static final String USE_DATABASE_SQL = "USE %s";
 
-    private static String CREATE_TABLE_BOOK_SQL = "CREATE TABLE IF NOT EXISTS book (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, description TEXT DEFAULT NULL, isbn VARCHAR(255) DEFAULT NULL, pages VARCHAR(255) DEFAULT NULL, PRIMARY KEY (id))";
+    private static final String CREATE_TABLE_BOOK_SQL = "CREATE TABLE IF NOT EXISTS book (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, description TEXT DEFAULT NULL, isbn VARCHAR(255) DEFAULT NULL, pages VARCHAR(255) DEFAULT NULL, PRIMARY KEY (id))";
 
-    private static String CREATE_TABLE_AUTHOR_SQL = "CREATE TABLE IF NOT EXISTS author (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id))";
+    private static final String CREATE_TABLE_AUTHOR_SQL = "CREATE TABLE IF NOT EXISTS author (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id))";
 
-    private static String CREATE_TABLE_BOOK_AUTHOR_SQL = "CREATE TABLE IF NOT EXISTS book_author (bookid INT NOT NULL, authorid INT NOT NULL, PRIMARY KEY (bookid, authorid), FOREIGN KEY (authorid) REFERENCES author(id) ON DELETE CASCADE, FOREIGN KEY (bookid) REFERENCES book(id) ON DELETE CASCADE)";
+    private static final String CREATE_TABLE_BOOK_AUTHOR_SQL = "CREATE TABLE IF NOT EXISTS book_author (bookid INT NOT NULL, authorid INT NOT NULL, PRIMARY KEY (bookid, authorid), FOREIGN KEY (authorid) REFERENCES author(id) ON DELETE CASCADE, FOREIGN KEY (bookid) REFERENCES book(id) ON DELETE CASCADE)";
 
     private void createDatabase(DataSourceProperties dataSourceProperties) {
         try (Connection connection = getConnection()) {
