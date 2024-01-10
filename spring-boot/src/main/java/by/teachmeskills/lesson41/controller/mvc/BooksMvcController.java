@@ -1,9 +1,9 @@
 package by.teachmeskills.lesson41.controller.mvc;
 
 
-import by.teachmeskills.lesson41.dao.AuthorsRepository;
-import by.teachmeskills.lesson41.dao.BooksRepository;
 import by.teachmeskills.lesson41.dto.BookDto;
+import by.teachmeskills.lesson41.service.AuthorsService;
+import by.teachmeskills.lesson41.service.BooksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,9 +20,9 @@ import java.util.List;
 @RequestMapping("/books")
 public class BooksMvcController {
 
-    private final BooksRepository booksRepository;
+    private final BooksService booksService;
 
-    private final AuthorsRepository authorsRepository;
+    private final AuthorsService authorsService;
 
     @GetMapping
     public String showBooks(Model model, @RequestParam(required = false) String searchText,
@@ -32,10 +32,10 @@ public class BooksMvcController {
                             @RequestParam(required = false) Long pagesTo) {
         log.info("Параметры фильтрации: searchText: {},searchType: {}, authorSelect: {}, pagesFrom: {}, pagesTo: {}", searchText, searchType, authorSelect, pagesFrom, pagesTo);
 
-        List<BookDto> bookDtoList = booksRepository.getFilteredBooks(searchText, searchType, authorSelect, pagesFrom, pagesTo);
+        List<BookDto> bookDtoList = booksService.getFilteredBooks(searchText, searchType, authorSelect, pagesFrom, pagesTo);
 
         model.addAttribute("books", bookDtoList);
-        model.addAttribute("authors", authorsRepository.getAllAuthors());
+        model.addAttribute("authors", authorsService.getAllAuthors());
         model.addAttribute("searchText", searchText);
         model.addAttribute("searchType", searchType);
         model.addAttribute("authorSelect", authorSelect);

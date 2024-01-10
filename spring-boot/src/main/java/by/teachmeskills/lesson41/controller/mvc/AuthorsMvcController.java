@@ -1,13 +1,13 @@
 package by.teachmeskills.lesson41.controller.mvc;
 
-import by.teachmeskills.lesson41.dao.AuthorsRepository;
 import by.teachmeskills.lesson41.dto.AuthorDto;
-import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
+import by.teachmeskills.lesson41.service.AuthorsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import java.util.List;
 @RequestMapping("/authors")
 public class AuthorsMvcController {
 
-    private final AuthorsRepository authorsRepository;
+    private final AuthorsService authorsService;
 
     @GetMapping
     public String getAllAuthors(Model model) {
-        List<AuthorDto> authorDtoList = authorsRepository.getAllAuthors();
-        model.addAttribute("authors",authorDtoList);
+        List<AuthorDto> authorDtoList = authorsService.getAllAuthors();
+        model.addAttribute("authors", authorDtoList);
         return "author";
     }
 
