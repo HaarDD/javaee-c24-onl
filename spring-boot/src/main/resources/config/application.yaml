@@ -1,0 +1,18 @@
+server:
+  port : 8090
+spring:
+  config:
+    import: classpath:/config/database.yaml
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+logging:
+  level:
+    root: info
+    org:
+      springframework:
+        jdbc:
+          core: TRACE
+  interceptor:
+    enabled: false

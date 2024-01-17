@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>spring-mvc</module>
+        <module>spring-boot</module>
     </modules>
 
 </project>
