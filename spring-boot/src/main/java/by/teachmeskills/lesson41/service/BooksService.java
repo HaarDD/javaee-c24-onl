@@ -1,9 +1,9 @@
 package by.teachmeskills.lesson41.service;
 
-import by.teachmeskills.lesson41.dto.BookDto;
+import by.teachmeskills.lesson41.entity.Book;
 import by.teachmeskills.lesson41.exception.ResourceNotCreatedException;
 import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
-import by.teachmeskills.lesson41.repositories.BooksRepository;
+import by.teachmeskills.lesson41.repository.HibernateBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,30 +14,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BooksService {
 
-    private final BooksRepository booksRepository;
+    private final HibernateBookRepository booksRepository;
 
-    public BookDto getBookById(Long id) {
-        return booksRepository.getBookById(id)
+    public Book getBookById(Integer id) {
+        return booksRepository.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(id)));
     }
 
-    public void addBook(@Valid BookDto bookDto) {
-        booksRepository.addBook(bookDto)
-                .orElseThrow(() -> new ResourceNotCreatedException("Ошибка создания книги!", bookDto));
+    public void addBook(@Valid Book book) {
+        booksRepository.add(book)
+                .orElseThrow(() -> new ResourceNotCreatedException("Ошибка создания книги!", book));
     }
 
-    public void editBook(@Valid BookDto bookDto) {
-        booksRepository.editBook(bookDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(bookDto.getId())));
+    public void editBook(@Valid Book book) {
+        booksRepository.edit(book)
+                .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(book.getId())));
     }
 
-    public void deleteBook(Long id) {
-        booksRepository.deleteBookById(id)
+    public void deleteBook(Integer id) {
+        booksRepository.deleteById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(id)));
     }
 
-    public List<BookDto> getFilteredBooks(String searchText, String searchType, List<Long> authorSelect, Long pagesFrom, Long pagesTo) {
-        return booksRepository.getFilteredBooks(searchText, searchType, authorSelect, pagesFrom, pagesTo);
+    public List<Book> getFilteredBooks(String searchText, String searchType, List<Integer> authorSelect, Integer pagesFrom, Integer pagesTo) {
+        return booksRepository.getAllByFilter(searchText, searchType, authorSelect, pagesFrom, pagesTo);
     }
 
 }
