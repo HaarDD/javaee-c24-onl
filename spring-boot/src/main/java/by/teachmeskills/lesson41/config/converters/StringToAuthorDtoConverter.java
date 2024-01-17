@@ -11,7 +11,7 @@ import java.util.Locale;
 public class StringToAuthorDtoConverter implements Formatter<Author> {
 
     @Override
-    public Author parse(String text, Locale locale) throws ParseException {
+    public Author parse(String text, Locale locale) {
         Integer id = Integer.parseInt(text);
         Author author = new Author();
         author.setId(id);
