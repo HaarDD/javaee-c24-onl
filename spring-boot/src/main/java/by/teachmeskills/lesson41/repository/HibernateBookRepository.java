@@ -2,17 +2,20 @@ package by.teachmeskills.lesson41.repository;
 
 import by.teachmeskills.lesson41.entity.Book;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
+@Transactional(readOnly = true)
+@Slf4j
 public class HibernateBookRepository implements BookRepository {
 
 
@@ -35,34 +38,37 @@ public class HibernateBookRepository implements BookRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Book> add(Book book) {
         try {
             entityManager.persist(book);
             return Optional.of(book);
         } catch (Exception e) {
+            log.error("Ошибка в ходе добавления книги {}", book, e);
             return Optional.empty();
         }
     }
 
     @Override
+    @Transactional
     public Optional<Book> edit(Book book) {
         try {
             entityManager.merge(book);
             return Optional.of(book);
         } catch (Exception e) {
+            log.error("Ошибка в ходе изменения книги книги {}", book, e);
             return Optional.empty();
         }
     }
 
     @Override
+    @Transactional
     public Optional<Book> deleteById(Integer id) {
         Optional<Book> optionalBook = getById(id);
         optionalBook.ifPresent(entityManager::remove);
         return optionalBook;
     }
 
-
-    //TODO написать тесты для разных комбинаций фильтров
     @Override
     public List<Book> getAllByFilter(String searchText, String searchType, List<Integer> authorSelect, Integer pagesFrom, Integer pagesTo) {
 
@@ -76,7 +82,7 @@ public class HibernateBookRepository implements BookRepository {
                 "AND (:pagesFrom IS NULL OR b.pages > :pagesFrom) " +
                 "AND (:pagesTo IS NULL OR b.pages < :pagesTo)";
 
-        javax.persistence.Query query = entityManager.createQuery(sql, Book.class);
+        Query query = entityManager.createQuery(sql, Book.class);
 
         query.setParameter("searchText", searchText);
         query.setParameter("searchType", searchType);

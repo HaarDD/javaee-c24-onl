@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
+@Transactional(readOnly = true)
 public class HibernateAuthorRepository implements AuthorRepository {
 
     @PersistenceContext
@@ -41,6 +41,7 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Author> add(Author author) {
         try {
             entityManager.persist(author);
@@ -51,6 +52,7 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Author> edit(Author author) {
         try {
             entityManager.merge(author);
@@ -61,6 +63,7 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Author> deleteById(Integer authorId) {
         Optional<Author> optionalAuthor = getById(authorId);
         optionalAuthor.ifPresent(entityManager::remove);
