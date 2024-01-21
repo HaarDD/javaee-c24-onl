@@ -38,7 +38,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false)
     @NotNull
     @NotEmpty
     @Size(max = 150, min = 2)
@@ -63,6 +63,6 @@ public class Book {
             joinColumns = @JoinColumn(name = "bookid"),
             inverseJoinColumns = @JoinColumn(name = "authorid")
     )
-    @Cascade(CascadeType.ALL)
+    @Cascade({CascadeType.PERSIST})
     private List<Author> authors;
 }
