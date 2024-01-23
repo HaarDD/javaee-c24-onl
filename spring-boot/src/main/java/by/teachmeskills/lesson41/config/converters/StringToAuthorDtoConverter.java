@@ -1,25 +1,24 @@
 package by.teachmeskills.lesson41.config.converters;
 
+import by.teachmeskills.lesson41.entity.Author;
+import by.teachmeskills.lesson41.service.AuthorsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.Formatter;
-import by.teachmeskills.lesson41.dto.AuthorDto;
 
-import java.text.ParseException;
-import java.util.Locale;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
 
 @Slf4j
-public class StringToAuthorDtoConverter implements Formatter<AuthorDto> {
+@Component
+@RequiredArgsConstructor
+public class StringToAuthorDtoConverter implements Converter<String, Author> {
+
+    private final AuthorsService authorsService;
 
     @Override
-    public AuthorDto parse(String text, Locale locale) throws ParseException {
-        Long id = Long.parseLong(text);
-        AuthorDto authorDto = new AuthorDto();
-        authorDto.setId(id);
-        return authorDto;
+    public Author convert(String source) {
+        return authorsService.getAuthorById(Integer.parseInt(source));
     }
 
-    @Override
-    public String print(AuthorDto object, Locale locale) {
-        return null;
-    }
 }

@@ -1,6 +1,6 @@
 package by.teachmeskills.lesson41.controller.mvc;
 
-import by.teachmeskills.lesson41.dto.AuthorDto;
+import by.teachmeskills.lesson41.entity.Author;
 import by.teachmeskills.lesson41.service.AuthorsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +21,8 @@ public class AuthorsMvcController {
 
     @GetMapping
     public String getAllAuthors(Model model) {
-        List<AuthorDto> authorDtoList = authorsService.getAllAuthors();
-        model.addAttribute("authors", authorDtoList);
+        List<Author> authorList = authorsService.getAllAuthors();
+        model.addAttribute("authors", authorList);
         return "author";
     }
 
