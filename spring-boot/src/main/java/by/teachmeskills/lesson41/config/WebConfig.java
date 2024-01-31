@@ -24,6 +24,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${logging.interceptor.enabled}")
     private boolean isLoggingInterceptorEnabled;
 
+    @Value("${storage.book_files_path}")
+    private String bookFilesStoragePath;
+
+    @Bean
+    public String bookFilesStoragePath() {
+        return bookFilesStoragePath;
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
