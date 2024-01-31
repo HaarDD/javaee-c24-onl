@@ -40,21 +40,23 @@ public class BookFilesService {
         try {
             return new UrlResource(Paths.get(filePath).toUri());
         } catch (MalformedURLException e) {
+            log.error("Ошибка выдачи файла: ", e);
             throw new RuntimeException(e);
         }
     }
 
     @Transactional
     public void uploadBookFileByBookId(MultipartFile file, Integer bookId) {
+
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+
+        String fileKey = sdf.format(timestamp) + file.getOriginalFilename();
+
+        String filePath = bookFilesStoragePath + fileKey;
+
+        Path path = Paths.get(filePath);
+
         try {
-            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-
-            String fileKey = sdf.format(timestamp) + file.getOriginalFilename();
-
-            String filePath = bookFilesStoragePath + fileKey;
-
-            Path path = Paths.get(filePath);
-
             Files.write(path, file.getBytes());
             log.info("Файл записан: {}", path);
 
@@ -76,18 +78,21 @@ public class BookFilesService {
 
     @Transactional
     public void removeBookFileByBookId(Integer bookId) {
-        String filePath = bookFilesStoragePath + bookFileRepository.getByBookId(bookId)
+        String fileKey = bookFileRepository.getByBookId(bookId)
                 .orElseThrow((() -> new ResourceNotFoundException("Файла для книги с id %s не найдено!".formatted(bookId)))).getFileKey();
+        String filePath = bookFilesStoragePath + fileKey;
 
         Path path = Paths.get(filePath);
         try {
             Files.delete(path);
-
+            log.info("Файл удален: {}", path);
+            bookFileRepository.deleteByBookId(bookId);
+            log.info("Файл удален из базы в базе данных: {}", fileKey);
         } catch (IOException e) {
             log.error("Ошибка удаления файла: ", e);
         }
 
-        bookFileRepository.deleteByBookId(bookId);
+
     }
 
 }
