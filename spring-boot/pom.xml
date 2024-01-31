@@ -19,6 +19,8 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <mysql.connector.version>8.0.33</mysql.connector.version>
+        <org.modelmapper.version>3.2.0</org.modelmapper.version>
     </properties>
 
     <dependencies>
@@ -41,7 +43,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <version>${mysql.connector.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -58,6 +60,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${org.modelmapper.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
