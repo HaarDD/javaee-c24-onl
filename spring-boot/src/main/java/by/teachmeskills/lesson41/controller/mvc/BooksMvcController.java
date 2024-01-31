@@ -1,6 +1,6 @@
 package by.teachmeskills.lesson41.controller.mvc;
 
-import by.teachmeskills.lesson41.entity.Book;
+import by.teachmeskills.lesson41.dto.BookDto;
 import by.teachmeskills.lesson41.service.AuthorsService;
 import by.teachmeskills.lesson41.service.BooksService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class BooksMvcController {
                             @RequestParam(required = false) Integer pagesTo) {
         log.info("Параметры фильтрации: searchText: {},searchType: {}, authorSelect: {}, pagesFrom: {}, pagesTo: {}", searchText, searchType, authorSelect, pagesFrom, pagesTo);
 
-        List<Book> bookList = booksService.getFilteredBooks(searchText, searchType, authorSelect, pagesFrom, pagesTo);
+        List<BookDto> bookList = booksService.getFilteredBooks(searchText, searchType, authorSelect, pagesFrom, pagesTo);
 
         model.addAttribute("books", bookList);
         model.addAttribute("authors", authorsService.getAllAuthors());

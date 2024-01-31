@@ -1,22 +1,22 @@
 package by.teachmeskills.lesson41.repository;
 
-import by.teachmeskills.lesson41.entity.Author;
+import by.teachmeskills.lesson41.entity.AuthorEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AuthorRepository {
-    List<Author> getAll();
+    List<AuthorEntity> getAll();
 
-    Optional<Author> getById(Integer authorId);
+    Optional<AuthorEntity> getById(Integer authorId);
 
-    Optional<Author> getByName(String name);
+    Optional<AuthorEntity> getByName(String name);
 
-    Optional<Author> add(Author authorDto);
+    Optional<AuthorEntity> add(AuthorEntity authorDto);
 
-    Optional<Author> edit(Author authorDto);
+    Optional<AuthorEntity> edit(AuthorEntity authorDto);
 
-    Optional<Author> deleteById(Integer authorId);
+    Optional<AuthorEntity> deleteById(Integer authorId);
 
-    List<Author> getAllByIds(List<Integer> authorsIds);
+    List<AuthorEntity> getAllByIds(List<Integer> authorsIds);
 }

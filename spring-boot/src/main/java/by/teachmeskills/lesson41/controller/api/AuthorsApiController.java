@@ -1,6 +1,6 @@
 package by.teachmeskills.lesson41.controller.api;
 
-import by.teachmeskills.lesson41.entity.Author;
+import by.teachmeskills.lesson41.dto.AuthorDto;
 import by.teachmeskills.lesson41.service.AuthorsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class AuthorsApiController {
     private final AuthorsService authorsService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Author>> getAuthorsByIds() {
+    public ResponseEntity<List<AuthorDto>> getAuthorsByIds() {
         return ResponseEntity.ok(authorsService.getAllAuthors());
     }
 
@@ -39,19 +39,19 @@ public class AuthorsApiController {
     }
 
     @GetMapping
-    public ResponseEntity<Author> getAuthorById(@RequestParam Integer id) {
+    public ResponseEntity<AuthorDto> getAuthorById(@RequestParam Integer id) {
         return ResponseEntity.ok(authorsService.getAuthorById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addAuthor(@ModelAttribute @Valid Author author) {
-        authorsService.addAuthor(author);
+    public void addAuthor(@ModelAttribute @Valid AuthorDto authorDto) {
+        authorsService.addAuthor(authorDto);
     }
 
     @PutMapping
-    public void editAuthor(@ModelAttribute @Valid Author author) {
-        authorsService.editAuthor(author);
+    public void editAuthor(@ModelAttribute @Valid AuthorDto authorDto) {
+        authorsService.editAuthor(authorDto);
     }
 
     @DeleteMapping
