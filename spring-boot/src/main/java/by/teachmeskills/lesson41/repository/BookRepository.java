@@ -1,21 +1,21 @@
 package by.teachmeskills.lesson41.repository;
 
-import by.teachmeskills.lesson41.entity.Book;
+import by.teachmeskills.lesson41.entity.BookEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository {
 
-    List<Book> getAll();
+    List<BookEntity> getAll();
 
-    Optional<Book> getById(Integer id);
+    Optional<BookEntity> getById(Integer id);
 
-    Optional<Book> add(Book book);
+    Optional<BookEntity> add(BookEntity book);
 
-    Optional<Book> edit(Book book);
+    Optional<BookEntity> edit(BookEntity book);
 
-    Optional<Book> deleteById(Integer id);
+    Optional<BookEntity> deleteById(Integer id);
 
-    List<Book> getAllByFilter(String searchText, String searchType, List<Integer> authorSelect, Integer pagesFrom, Integer pagesTo);
+    List<BookEntity> getAllByFilter(String searchText, String searchType, List<Integer> authorSelect, Integer pagesFrom, Integer pagesTo);
 }

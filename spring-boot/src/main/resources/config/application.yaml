@@ -14,6 +14,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 50MB
+      max-file-size: 20MB
 logging:
   level:
     root: info
@@ -26,3 +31,5 @@ logging:
           BasicBinder: TRACE
   interceptor:
     enabled: false
+storage:
+  book_files_path: "E:\\Projects\\Storage\\lesson37_bookstore_storage\\files\\"
