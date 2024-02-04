@@ -1,15 +1,11 @@
 package by.teachmeskills.lesson41.service;
 
-import by.teachmeskills.lesson41.entity.BookFileEntity;
-import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
-import by.teachmeskills.lesson41.repository.HibernateBookFileRepository;
-import by.teachmeskills.lesson41.repository.HibernateBookRepository;
+import by.teachmeskills.lesson41.dto.BookFileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,20 +19,19 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
-public class BookFilesService {
+public class BookFileService {
 
-    private final HibernateBookFileRepository bookFileRepository;
+    private final BookService bookService;
 
-    private final HibernateBookRepository bookRepository;
+    private final BookFileEntityService bookFileEntityService;
 
     private final String bookFilesStoragePath;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
 
     public Resource getBookFileResourceByBookId(Integer bookId) {
-        String filePath = bookFilesStoragePath + bookFileRepository.getByBookId(bookId).orElseThrow().getFileKey();
+        String filePath = bookFilesStoragePath + bookFileEntityService.getBookFileByBookId(bookId).getFileKey();
         try {
             return new UrlResource(Paths.get(filePath).toUri());
         } catch (MalformedURLException e) {
@@ -45,30 +40,29 @@ public class BookFilesService {
         }
     }
 
-    @Transactional
     public void uploadBookFileByBookId(MultipartFile file, Integer bookId) {
-
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-
-        String fileKey = sdf.format(timestamp) + file.getOriginalFilename();
-
-        String filePath = bookFilesStoragePath + fileKey;
-
-        Path path = Paths.get(filePath);
-
         try {
+            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+
+            String fileKey = sdf.format(timestamp) + file.getOriginalFilename();
+
+            String filePath = bookFilesStoragePath + fileKey;
+
+            Path path = Paths.get(filePath);
+
             Files.write(path, file.getBytes());
+
             log.info("Файл записан: {}", path);
 
-            BookFileEntity bookFileEntity = new BookFileEntity()
+            BookFileDto bookFileDto = new BookFileDto()
                     .setFileName(file.getOriginalFilename())
                     .setFileSize((int) file.getSize())
                     .setFileKey(fileKey)
                     .setUploadDate(timestamp)
-                    .setBook(bookRepository.getById(bookId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(bookId))));
+                    .setBook(bookService.getBookById(bookId));
 
-            bookFileRepository.add(bookFileEntity);
+            bookFileEntityService.addBookFile(bookFileDto);
+
             log.info("Файл отмечен в базе данных: {}", fileKey);
 
         } catch (Exception e) {
@@ -76,23 +70,20 @@ public class BookFilesService {
         }
     }
 
-    @Transactional
     public void removeBookFileByBookId(Integer bookId) {
-        String fileKey = bookFileRepository.getByBookId(bookId)
-                .orElseThrow((() -> new ResourceNotFoundException("Файла для книги с id %s не найдено!".formatted(bookId)))).getFileKey();
+        String fileKey = bookFileEntityService.getBookFileByBookId(bookId).getFileKey();
         String filePath = bookFilesStoragePath + fileKey;
 
         Path path = Paths.get(filePath);
         try {
             Files.delete(path);
             log.info("Файл удален: {}", path);
-            bookFileRepository.deleteByBookId(bookId);
-            log.info("Файл удален из базы в базе данных: {}", fileKey);
         } catch (IOException e) {
             log.error("Ошибка удаления файла: ", e);
         }
 
-
+        bookFileEntityService.deleteBookFileByBookId(bookId);
+        log.info("Файл удален из базы в базе данных: {}", fileKey);
     }
 
 }
