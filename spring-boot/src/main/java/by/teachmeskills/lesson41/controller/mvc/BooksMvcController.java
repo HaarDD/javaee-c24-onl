@@ -1,8 +1,8 @@
 package by.teachmeskills.lesson41.controller.mvc;
 
 import by.teachmeskills.lesson41.dto.BookDto;
-import by.teachmeskills.lesson41.service.AuthorsService;
-import by.teachmeskills.lesson41.service.BooksService;
+import by.teachmeskills.lesson41.service.AuthorService;
+import by.teachmeskills.lesson41.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,9 +19,9 @@ import java.util.List;
 @RequestMapping("/books")
 public class BooksMvcController {
 
-    private final BooksService booksService;
+    private final BookService booksService;
 
-    private final AuthorsService authorsService;
+    private final AuthorService authorsService;
 
     @GetMapping
     public String showBooks(Model model, @RequestParam(required = false) String searchText,

@@ -1,7 +1,7 @@
 package by.teachmeskills.lesson41.config.converters;
 
 import by.teachmeskills.lesson41.dto.AuthorDto;
-import by.teachmeskills.lesson41.service.AuthorsService;
+import by.teachmeskills.lesson41.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StringToAuthorDtoConverter implements Converter<String, AuthorDto> {
 
-    private final AuthorsService authorsService;
+    private final AuthorService authorsService;
 
     @Override
     public AuthorDto convert(String source) {

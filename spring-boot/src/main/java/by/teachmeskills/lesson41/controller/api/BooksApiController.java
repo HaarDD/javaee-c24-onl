@@ -1,9 +1,8 @@
 package by.teachmeskills.lesson41.controller.api;
 
-import by.teachmeskills.lesson41.converter.BookConverter;
 import by.teachmeskills.lesson41.dto.BookDto;
-import by.teachmeskills.lesson41.service.BookFilesService;
-import by.teachmeskills.lesson41.service.BooksService;
+import by.teachmeskills.lesson41.service.BookFileService;
+import by.teachmeskills.lesson41.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -34,9 +33,9 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/api/book")
 public class BooksApiController {
 
-    private final BooksService booksService;
+    private final BookService booksService;
 
-    private final BookFilesService bookFilesService;
+    private final BookFileService bookFilesService;
 
     @GetMapping
     public ResponseEntity<BookDto> getBookById(@RequestParam Integer bookId) {

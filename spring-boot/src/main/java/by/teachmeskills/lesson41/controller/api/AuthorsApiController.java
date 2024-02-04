@@ -1,7 +1,7 @@
 package by.teachmeskills.lesson41.controller.api;
 
 import by.teachmeskills.lesson41.dto.AuthorDto;
-import by.teachmeskills.lesson41.service.AuthorsService;
+import by.teachmeskills.lesson41.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/api/author")
 public class AuthorsApiController {
 
-    private final AuthorsService authorsService;
+    private final AuthorService authorsService;
 
     @GetMapping("/all")
     public ResponseEntity<List<AuthorDto>> getAuthorsByIds() {
