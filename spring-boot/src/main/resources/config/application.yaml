@@ -14,6 +14,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  datasource:
+    hikari:
+      leak-detection-threshold: 5000
   servlet:
     multipart:
       enabled: true
@@ -33,3 +36,8 @@ logging:
     enabled: false
 storage:
   book_files_path: "E:\\Projects\\Storage\\lesson37_bookstore_storage\\files\\"
+springdoc:
+  swagger-ui:
+    path: /docs.html
+  api-docs:
+    path: /api/docs.yaml
