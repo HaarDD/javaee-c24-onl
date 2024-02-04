@@ -1,6 +1,7 @@
 package by.teachmeskills.lesson41.dto;
 
 import by.teachmeskills.lesson41.entity.BookFileEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.ISBN;
@@ -35,5 +36,6 @@ public class BookDto {
 
     private List<AuthorDto> authors;
 
+    @JsonIgnore
     private BookFileEntity bookFile;
 }

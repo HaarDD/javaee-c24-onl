@@ -4,6 +4,7 @@ import by.teachmeskills.lesson41.dto.BookDto;
 import by.teachmeskills.lesson41.exception.ResourceNotCreatedException;
 import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
 import by.teachmeskills.lesson41.mapper.BookMapper;
+import by.teachmeskills.lesson41.repository.HibernateBookFileRepository;
 import by.teachmeskills.lesson41.repository.HibernateBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class BookService {
 
     private final HibernateBookRepository booksRepository;
 
-    private final BookFileService bookFilesService;
+    private final BookFileService bookFileService;
 
     private final BookMapper bookMapper;
 
@@ -43,7 +44,7 @@ public class BookService {
     public void deleteBook(Integer id) {
         booksRepository.deleteById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(id)));
-        bookFilesService.removeBookFileByBookId(id);
+        bookFileService.removeBookFileByBookId(id);
     }
 
     public List<BookDto> getFilteredBooks(String searchText, String searchType, List<Integer> authorSelect, Integer pagesFrom, Integer pagesTo) {
