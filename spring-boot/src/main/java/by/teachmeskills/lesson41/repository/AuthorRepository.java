@@ -1,22 +1,16 @@
 package by.teachmeskills.lesson41.repository;
 
 import by.teachmeskills.lesson41.entity.AuthorEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface AuthorRepository {
-    List<AuthorEntity> getAll();
-
-    Optional<AuthorEntity> getById(Integer authorId);
+public interface AuthorRepository extends JpaRepository<AuthorEntity, Integer> {
 
     Optional<AuthorEntity> getByName(String name);
 
-    Optional<AuthorEntity> add(AuthorEntity authorDto);
+    Boolean existsByNameIgnoreCase(String name);
 
-    Optional<AuthorEntity> edit(AuthorEntity authorDto);
-
-    Optional<AuthorEntity> deleteById(Integer authorId);
-
-    List<AuthorEntity> getAllByIds(List<Integer> authorsIds);
+    List<AuthorEntity> getAllByIdIn(List<Integer> authorIds);
 }
