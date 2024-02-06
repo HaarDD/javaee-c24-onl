@@ -2,12 +2,15 @@ package by.teachmeskills.lesson41.exception.handler;
 
 import by.teachmeskills.lesson41.exception.ResourceAlreadyExistException;
 import by.teachmeskills.lesson41.exception.ResourceNotCreatedException;
+import by.teachmeskills.lesson41.exception.ResourceNotDeletedException;
+import by.teachmeskills.lesson41.exception.ResourceNotEditedException;
 import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
 import by.teachmeskills.lesson41.exception.message.ErrorMessage;
 import by.teachmeskills.lesson41.exception.message.ValidationErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -52,6 +55,29 @@ public class LibraryExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResourceNotEditedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> resourceNotEditedException(ResourceNotEditedException ex){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                ex.getMessage(),
+                "Ресурс не был отредактирован!");
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotDeletedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> resourceNotEditedException(ResourceNotDeletedException ex){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                ex.getMessage(),
+                "Ресурс не был удален!");
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ValidationErrorMessage> handleValidationExceptions(BindException ex) {
@@ -62,6 +88,17 @@ public class LibraryExceptionHandler {
                 "Ресурс не прошел валидацию!",
                 getFieldErrors(ex));
         return new ResponseEntity<>(validationErrorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handleHttpMethodNotSupportedExceptions(HttpRequestMethodNotSupportedException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                "Method: %s".formatted(ex.getMethod()),
+                "Метод по данному url не поддерживается!");
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
 
