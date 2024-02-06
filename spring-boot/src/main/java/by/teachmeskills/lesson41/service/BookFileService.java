@@ -22,8 +22,6 @@ import java.time.LocalDateTime;
 @Slf4j
 public class BookFileService {
 
-    private final BookService bookService;
-
     private final BookFileEntityService bookFileEntityService;
 
     private final String bookFilesStoragePath;
@@ -58,10 +56,9 @@ public class BookFileService {
                     .setFileName(file.getOriginalFilename())
                     .setFileSize((int) file.getSize())
                     .setFileKey(fileKey)
-                    .setUploadDate(timestamp)
-                    .setBook(bookService.getBookById(bookId));
+                    .setUploadDate(timestamp);
 
-            bookFileEntityService.addBookFile(bookFileDto);
+            bookFileEntityService.addBookFile(bookFileDto, bookId);
 
             log.info("Файл отмечен в базе данных: {}", fileKey);
 

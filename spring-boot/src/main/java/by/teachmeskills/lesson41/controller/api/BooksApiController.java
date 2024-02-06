@@ -3,6 +3,9 @@ package by.teachmeskills.lesson41.controller.api;
 import by.teachmeskills.lesson41.dto.BookDto;
 import by.teachmeskills.lesson41.service.BookFileService;
 import by.teachmeskills.lesson41.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -31,25 +34,41 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/book")
+@Tag(name="Книги", description="Управление книгами и загрузка файлов")
 public class BooksApiController {
 
     private final BookService booksService;
 
     private final BookFileService bookFilesService;
 
+    @Operation(summary = "Получить", description = "Позволяет получить одну книгу по id")
     @GetMapping
     public ResponseEntity<BookDto> getBookById(@RequestParam Integer bookId) {
         BookDto bookDto = booksService.getBookById(bookId);
         return ResponseEntity.ok(bookDto);
     }
 
+    @Operation(summary = "Добавить", description = "Позволяет добавить одну книгу")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBook(@ModelAttribute @Valid BookDto bookDto) {
+    public void addBook(@ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
         booksService.addBook(bookDto);
     }
 
+    @Operation(summary = "Редактировать", description = "Позволяет редактировать одну книгу")
+    @PutMapping
+    public void editBook(@ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
+        booksService.editBook(bookDto);
+    }
 
+    @Operation(summary = "Удалить", description = "Позволяет удалить одну книгу")
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(@RequestParam Integer bookId) {
+        booksService.deleteBook(bookId);
+    }
+
+    @Operation(summary = "Скачать файл книги", description = "Позволяет скачать файл книги по id книги")
     @GetMapping("/{bookId}/bookfile")
     public ResponseEntity<Resource> downloadBookFile(@PathVariable Integer bookId) {
 
@@ -66,26 +85,17 @@ public class BooksApiController {
 
     }
 
-    @PostMapping("/{bookId}/bookfile")
+    @Operation(summary = "Загрузить файл книги", description = "Позволяет загрузить файл книги и прикрепить его к книге")
+    @PostMapping(path = "/{bookId}/bookfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBookWithFile(@PathVariable Integer bookId, @RequestPart("file") MultipartFile bookFile) {
+    public void addBookWithFile(@PathVariable Integer bookId, @Parameter(description = "Файл любого типа, до 20мб") @RequestPart(name = "file", required = true) MultipartFile bookFile) {
         bookFilesService.uploadBookFileByBookId(bookFile, bookId);
     }
 
+    @Operation(summary = "Удалить файл книги", description = "Позволяет удалить файл книги по id книги")
     @DeleteMapping("/{bookId}/bookfile")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeBookWithFile(@PathVariable Integer bookId) {
         bookFilesService.removeBookFileByBookId(bookId);
-    }
-
-    @PutMapping
-    public void editBook(@ModelAttribute @Valid BookDto bookDto) {
-        booksService.editBook(bookDto);
-    }
-
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@RequestParam Integer bookId) {
-        booksService.deleteBook(bookId);
     }
 }

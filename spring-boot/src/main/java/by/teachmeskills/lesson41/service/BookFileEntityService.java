@@ -5,6 +5,7 @@ import by.teachmeskills.lesson41.exception.ResourceNotCreatedException;
 import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
 import by.teachmeskills.lesson41.mapper.BookFileMapper;
 import by.teachmeskills.lesson41.repository.HibernateBookFileRepository;
+import by.teachmeskills.lesson41.repository.HibernateBookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ class BookFileEntityService {
 
     private final HibernateBookFileRepository bookFileRepository;
 
+    private final HibernateBookRepository bookRepository;
+
     private final BookFileMapper bookFileMapper;
 
     public BookFileDto getBookFileByBookId(Integer bookId) {
@@ -26,8 +29,8 @@ class BookFileEntityService {
     }
 
     @Transactional
-    public void addBookFile(BookFileDto bookFileDto) {
-        bookFileRepository.add(bookFileMapper.toEntity(bookFileDto))
+    public void addBookFile(BookFileDto bookFileDto, Integer bookId) {
+        bookFileRepository.add(bookFileMapper.toEntity(bookFileDto).setBook(bookRepository.getById(bookId).orElseThrow(() -> new ResourceNotFoundException("Ошибка создания записи о файле книги, книга с id %s не найдена".formatted(bookId)))))
                 .orElseThrow(() -> new ResourceNotCreatedException("Ошибка создания записи о файле книги!", bookFileDto));
     }
 
