@@ -13,9 +13,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
            SELECT DISTINCT b FROM BookEntity b
            LEFT JOIN b.authors a
            WHERE (:searchText IS NULL OR
-           (:searchType = 'name' AND LOWER(b.name) LIKE LOWER(CONCAT('%', :searchText, '%'))) OR
+           (:searchType = 'name' AND LOWER(b.name) LIKE LOWER(CONCAT(:searchText, '%'))) OR
            (:searchType = 'description' AND LOWER(b.description) LIKE LOWER(CONCAT(:searchText, '%'))) OR
-           (:searchType = 'isbn' AND LOWER(b.isbn) LIKE LOWER(CONCAT('%', :searchText, '%'))))
+           (:searchType = 'isbn' AND LOWER(b.isbn) LIKE LOWER(CONCAT(:searchText, '%'))))
            AND (:authorSelectIsNull IS TRUE OR a.id IN :authorSelect)
            AND (:pagesFrom IS NULL OR b.pages > :pagesFrom)
            AND (:pagesTo IS NULL OR b.pages < :pagesTo)
