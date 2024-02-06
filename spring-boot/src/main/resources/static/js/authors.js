@@ -36,7 +36,7 @@ editAuthorModal.on('show.bs.modal', function (event) {
         // Настройка формы для редактирования автора (установка значений автора с подгрузкой из бэка)
         editAuthorForm[0].action = "/api/author";
 
-        $.get('/api/author?id=' + authorId, function (response) {
+        $.get('/api/author/' + authorId, function (response) {
             editAuthorModalLabel.text('Редактирование автора: ');
             editAuthorId.val(response.id);
             editAuthorName.val(response.name);
@@ -53,7 +53,7 @@ editAuthorModal.on('show.bs.modal', function (event) {
         console.log($(this).serialize());
         $.ajax({
             type: isAddForm ? "POST" : "PUT",
-            url: $(this).attr('action') + '?' + $(this).serialize(),
+            url: isAddForm ? $(this).attr('action') + '?' + $(this).serialize() : $(this).attr('action') + "/" + editAuthorId.val() + '?' + $(this).serialize(),
             success: function (response) {
                 // Перезагрузка страницы в случае 200-го кода
                 window.location.reload();
@@ -95,7 +95,7 @@ deleteAuthorModal.on('show.bs.modal', function (event) {
 // Функция удаления автора
 function deleteAuthor(authorId) {
     $.ajax({
-        url: '/api/author?id=' + authorId,
+        url: '/api/author/' + authorId,
         type: 'DELETE',
         success: function () {
             window.location.reload();
