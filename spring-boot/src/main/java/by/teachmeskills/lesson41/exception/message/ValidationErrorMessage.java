@@ -12,7 +12,7 @@ public class ValidationErrorMessage extends ErrorMessage {
 
     private Map<String, String> fieldErrors;
 
-    public ValidationErrorMessage(int statusCode, Date timestamp, String message, String description, Map<String,String> fieldErrors) {
+    public ValidationErrorMessage(int statusCode, Date timestamp, String message, String description, Map<String, String> fieldErrors) {
         super(statusCode, timestamp, message, description);
         this.fieldErrors = fieldErrors;
     }

@@ -46,7 +46,7 @@ public class LibraryExceptionHandler {
 
     @ExceptionHandler(ResourceNotCreatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> resourceNotCreatedException(ResourceNotCreatedException ex){
+    public ResponseEntity<ErrorMessage> resourceNotCreatedException(ResourceNotCreatedException ex) {
         ErrorMessage errorMessage = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),
@@ -57,7 +57,7 @@ public class LibraryExceptionHandler {
 
     @ExceptionHandler(ResourceNotEditedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> resourceNotEditedException(ResourceNotEditedException ex){
+    public ResponseEntity<ErrorMessage> resourceNotEditedException(ResourceNotEditedException ex) {
         ErrorMessage errorMessage = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),
@@ -68,7 +68,7 @@ public class LibraryExceptionHandler {
 
     @ExceptionHandler(ResourceNotDeletedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> resourceNotEditedException(ResourceNotDeletedException ex){
+    public ResponseEntity<ErrorMessage> resourceNotEditedException(ResourceNotDeletedException ex) {
         ErrorMessage errorMessage = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),

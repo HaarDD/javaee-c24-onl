@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/book")
-@Tag(name="Книги", description="Управление книгами и загрузка файлов")
+@Tag(name = "Книги", description = "Управление книгами и загрузка файлов")
 public class BooksApiController {
 
     private final BookService booksService;

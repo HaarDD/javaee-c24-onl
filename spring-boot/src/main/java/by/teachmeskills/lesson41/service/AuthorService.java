@@ -44,9 +44,9 @@ public class AuthorService {
     }
 
     public void addAuthor(AuthorDto authorDto) {
-        if(authorsRepository.existsByNameIgnoreCase(authorDto.getName())){
+        if (authorsRepository.existsByNameIgnoreCase(authorDto.getName())) {
             throw new ResourceAlreadyExistException("Автор с именем \"%s\" уже существует".formatted(authorDto.getName()));
-        } else{
+        } else {
             try {
                 authorsRepository.save(authorMapper.toEntity(authorDto.setId(0)));
             } catch (Exception e) {
