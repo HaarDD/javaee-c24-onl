@@ -4,8 +4,8 @@ import by.teachmeskills.lesson41.dto.BookFileDto;
 import by.teachmeskills.lesson41.exception.ResourceNotCreatedException;
 import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
 import by.teachmeskills.lesson41.mapper.BookFileMapper;
-import by.teachmeskills.lesson41.repository.HibernateBookFileRepository;
-import by.teachmeskills.lesson41.repository.HibernateBookRepository;
+import by.teachmeskills.lesson41.repository.BookFileRepository;
+import by.teachmeskills.lesson41.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,12 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 class BookFileEntityService {
 
-    private final HibernateBookFileRepository bookFileRepository;
+    private final BookFileRepository bookFileRepository;
 
-    private final HibernateBookRepository bookRepository;
+    private final BookRepository bookRepository;
 
     private final BookFileMapper bookFileMapper;
 
@@ -28,16 +27,23 @@ class BookFileEntityService {
                 .orElseThrow(() -> new ResourceNotFoundException("Запись о файле для книги с id %s не найдена!".formatted(bookId))));
     }
 
-    @Transactional
     public void addBookFile(BookFileDto bookFileDto, Integer bookId) {
-        bookFileRepository.add(bookFileMapper.toEntity(bookFileDto).setBook(bookRepository.getById(bookId).orElseThrow(() -> new ResourceNotFoundException("Ошибка создания записи о файле книги, книга с id %s не найдена".formatted(bookId)))))
-                .orElseThrow(() -> new ResourceNotCreatedException("Ошибка создания записи о файле книги!", bookFileDto));
+        try {
+            bookFileRepository.save(bookFileMapper.toEntity(bookFileDto).setBook(bookRepository.findById(bookId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Ошибка добавления записи о файле для книги с id %s!".formatted(bookId)))));
+        } catch (Exception e) {
+            log.warn("Запись о файле не была создана! bookFileDto: {}", bookFileDto);
+            throw new ResourceNotCreatedException("Запись о файле не была создана!");
+        }
     }
 
     @Transactional
     public void deleteBookFileByBookId(Integer bookId) {
-        bookFileRepository.deleteByBookId(bookId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ошибка удаления, запись о файле для книги с id %s не найдена!".formatted(bookId)));
+        try {
+            bookFileRepository.deleteByBookId(bookId);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Ошибка удаления записи о файле для книги с id %s!".formatted(bookId));
+        }
     }
 
 }

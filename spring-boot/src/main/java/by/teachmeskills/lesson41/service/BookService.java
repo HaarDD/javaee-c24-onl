@@ -2,53 +2,68 @@ package by.teachmeskills.lesson41.service;
 
 import by.teachmeskills.lesson41.dto.BookDto;
 import by.teachmeskills.lesson41.exception.ResourceNotCreatedException;
+import by.teachmeskills.lesson41.exception.ResourceNotDeletedException;
+import by.teachmeskills.lesson41.exception.ResourceNotEditedException;
 import by.teachmeskills.lesson41.exception.ResourceNotFoundException;
+import by.teachmeskills.lesson41.mapper.BookListMapper;
 import by.teachmeskills.lesson41.mapper.BookMapper;
-import by.teachmeskills.lesson41.repository.HibernateBookFileRepository;
-import by.teachmeskills.lesson41.repository.HibernateBookRepository;
+import by.teachmeskills.lesson41.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Slf4j
 public class BookService {
 
-    private final HibernateBookRepository booksRepository;
+    private final BookRepository bookRepository;
 
     private final BookFileService bookFileService;
 
     private final BookMapper bookMapper;
 
+    private final BookListMapper bookListMapper;
+
     public BookDto getBookById(Integer id) {
-        return bookMapper.toDto(booksRepository.getById(id)
+        return bookMapper.toDto(bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(id))));
     }
 
-    @Transactional
     public void addBook(BookDto bookDto) {
-        booksRepository.add(bookMapper.toEntity(bookDto))
-                .orElseThrow(() -> new ResourceNotCreatedException("Ошибка создания книги!", bookDto));
+        try {
+            bookRepository.save(bookMapper.toEntity(bookDto.setId(0)));
+        } catch (Exception e) {
+            throw new ResourceNotCreatedException("Ошибка создания книги!", bookDto);
+        }
     }
 
-    @Transactional
     public void editBook(BookDto bookDto) {
-        booksRepository.edit(bookMapper.toEntity(bookDto))
-                .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(bookDto.getId())));
+        try {
+            bookRepository.save(bookMapper.toEntity(bookDto));
+        } catch (Exception e) {
+            throw new ResourceNotEditedException("Ошибка редактирования книги!", bookDto);
+        }
     }
 
-    @Transactional
     public void deleteBook(Integer id) {
-        booksRepository.deleteById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Книга с id %s не найдена!".formatted(id)));
-        bookFileService.removeBookFileByBookId(id);
+        try {
+            bookRepository.deleteById(id);
+            try {
+                bookFileService.removeBookFileByBookId(id);
+            } catch (ResourceNotFoundException e) {
+                log.info("Запись о книге не найдена");
+            }
+        } catch (Exception e) {
+            throw new ResourceNotDeletedException("Ошибка удаления книги с id: %s!".formatted(id));
+        }
     }
 
     public List<BookDto> getFilteredBooks(String searchText, String searchType, List<Integer> authorSelect, Integer pagesFrom, Integer pagesTo) {
-        return booksRepository.getAllByFilter(searchText, searchType, authorSelect, pagesFrom, pagesTo).stream().map(bookMapper::toDto).toList();
+        return bookListMapper.toDtoList(bookRepository.getAllByFilter(searchText, searchType, authorSelect == null, authorSelect, pagesFrom, pagesTo));
     }
 
 }
