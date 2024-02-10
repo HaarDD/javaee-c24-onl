@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,21 +33,21 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/book")
-@Tag(name="Книги", description="Управление книгами и загрузка файлов")
+@Tag(name = "Книги", description = "Управление книгами и загрузка файлов")
 public class BooksApiController {
 
     private final BookService booksService;
 
     private final BookFileService bookFilesService;
 
-    @Operation(summary = "Получить", description = "Позволяет получить одну книгу по id")
-    @GetMapping
-    public ResponseEntity<BookDto> getBookById(@RequestParam Integer bookId) {
+    @Operation(summary = "Получить", description = "Позволяет получить данные книги по id")
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookDto> getBookById(@PathVariable Integer bookId) {
         BookDto bookDto = booksService.getBookById(bookId);
         return ResponseEntity.ok(bookDto);
     }
 
-    @Operation(summary = "Добавить", description = "Позволяет добавить одну книгу")
+    @Operation(summary = "Добавить", description = "Позволяет добавить одну книгу, id игнорируется")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addBook(@ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
@@ -56,15 +55,15 @@ public class BooksApiController {
     }
 
     @Operation(summary = "Редактировать", description = "Позволяет редактировать одну книгу")
-    @PutMapping
-    public void editBook(@ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
-        booksService.editBook(bookDto);
+    @PutMapping("/{bookId}")
+    public void editBook(@PathVariable Integer bookId, @ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
+        booksService.editBook(bookDto.setId(bookId));
     }
 
     @Operation(summary = "Удалить", description = "Позволяет удалить одну книгу")
-    @DeleteMapping
+    @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@RequestParam Integer bookId) {
+    public void deleteBook(@PathVariable Integer bookId) {
         booksService.deleteBook(bookId);
     }
 

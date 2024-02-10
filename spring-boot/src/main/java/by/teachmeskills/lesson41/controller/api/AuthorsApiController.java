@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,9 +47,9 @@ public class AuthorsApiController {
     }
 
     @Operation(summary = "Получить", description = "Позволяет получить автора по id")
-    @GetMapping
-    public ResponseEntity<AuthorDto> getAuthorById(@RequestParam Integer id) {
-        return ResponseEntity.ok(authorsService.getAuthorById(id));
+    @GetMapping("/{authorId}")
+    public ResponseEntity<AuthorDto> getAuthorById(@PathVariable @Parameter(description = "Id получаемого автора", required = true) Integer authorId) {
+        return ResponseEntity.ok(authorsService.getAuthorById(authorId));
     }
 
     @Operation(summary = "Добавить", description = "Позволяет добавить одного автора")
@@ -59,15 +60,15 @@ public class AuthorsApiController {
     }
 
     @Operation(summary = "Редактировать", description = "Позволяет редактировать одного автора")
-    @PutMapping
-    public void editAuthor(@ModelAttribute @Valid @Parameter(description = "Модель автора") AuthorDto authorDto) {
-        authorsService.editAuthor(authorDto);
+    @PutMapping("/{authorId}")
+    public void editAuthor(@PathVariable @Parameter(description = "Id изменяемого автора", required = true) Integer authorId, @ModelAttribute @Valid @Parameter(description = "Модель автора") AuthorDto authorDto) {
+        authorsService.editAuthor(authorDto.setId(authorId));
     }
 
     @Operation(summary = "Удалить", description = "Позволяет удалить одного автора")
-    @DeleteMapping
+    @DeleteMapping("/{authorId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAuthor(@RequestParam Integer id) {
-        authorsService.deleteAuthor(id);
+    public void deleteAuthor(@PathVariable @Parameter(description = "Id удаляемого автора", required = true) Integer authorId) {
+        authorsService.deleteAuthor(authorId);
     }
 }

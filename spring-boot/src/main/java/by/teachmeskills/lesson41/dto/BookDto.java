@@ -4,6 +4,7 @@ import by.teachmeskills.lesson41.entity.BookFileEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.ISBN;
 
 import javax.validation.constraints.Max;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class BookDto {
 
     private Integer id;
