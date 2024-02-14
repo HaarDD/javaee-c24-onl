@@ -30,6 +30,6 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        
+
     }
 }
