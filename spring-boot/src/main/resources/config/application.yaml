@@ -2,7 +2,7 @@ server:
   port : 8090
 spring:
   config:
-    import: classpath:/config/database.yaml
+    import: classpath:/config/database.yaml, classpath:/config/jwt.yaml
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
