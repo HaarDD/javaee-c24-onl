@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import static by.teachmeskills.lesson41.security.JwtFilter.JWT_COOKIE_NAME;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthApiController {
 
     public static final String AUTH_REQUEST_MAPPING = "/auth";
 
@@ -23,13 +28,19 @@ public class AuthController {
     private final JwtHelper jwtHelper;
 
     @GetMapping(AUTH_REQUEST_MAPPING)
-    public ResponseEntity<String> login(@RequestParam String login, @RequestParam String password) {
+    public ResponseEntity<String> login(@RequestParam String login, @RequestParam String password, HttpServletResponse servletResponse) {
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                     (UsernamePasswordAuthenticationToken) daoAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-            return ResponseEntity.ok(jwtHelper.generateToken(
-                    AuthController.class.getSimpleName(),
-                    usernamePasswordAuthenticationToken));
+
+            String jwt = jwtHelper.generateToken(AuthApiController.class.getSimpleName(), usernamePasswordAuthenticationToken);
+
+            Cookie cookie = new Cookie(JWT_COOKIE_NAME, jwt);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(600);
+            cookie.setPath("/");
+            servletResponse.addCookie(cookie);
+            return ResponseEntity.ok("Авторизация прошла успешно");
         } catch (Exception e) {
             log.error("Ошибка аутентификации: {}", login, e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
