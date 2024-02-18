@@ -1,0 +1,203 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Создание таблицы ролей -->
+    <changeSet id="create-role-table" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="role"/>
+            </not>
+        </preConditions>
+        <createTable tableName="role">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Создание индекса для имен ролей -->
+    <changeSet id="create-unique-index-on-role" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="UK_role_name"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="UK_role_name" tableName="role" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Создание таблицы пользователей -->
+    <changeSet id="create-user-table" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="user">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="fullname" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="login" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="role_id" type="int">
+                <constraints nullable="false"/>=
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <!-- Создание внешнего ключа для таблицы пользователи - роли -->
+    <changeSet id="create-foreign-key-on-user" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="user" foreignKeyName="FK_user_role_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="user" baseColumnNames="role_id" constraintName="FK_user_role_id"
+                                 referencedTableName="role" referencedColumnNames="id"
+                                 onDelete="RESTRICT"/>
+    </changeSet>
+
+    <!-- Создание таблицы книг -->
+    <changeSet id="create-book-table" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="book"/>
+            </not>
+        </preConditions>
+        <createTable tableName="book">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="isbn" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="pages" type="int">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Создание таблицы файлов книг -->
+    <changeSet id="create-book-file-table" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="book_file"/>
+            </not>
+        </preConditions>
+        <createTable tableName="book_file">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="file_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_size" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_key" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upload_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <!-- Создание внешнего ключа для файлов книг - книг -->
+    <changeSet id="create-foreign-key-on-book-file" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="book_file" foreignKeyName="FK_book_file_book_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="book_file" baseColumnNames="book_id"
+                                 constraintName="FK_book_file_book_id" referencedTableName="book"
+                                 referencedColumnNames="id" onDelete="RESTRICT"/>
+    </changeSet>
+
+    <!-- Создание таблицы авторов -->
+    <changeSet id="create-author-table" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="author"/>
+            </not>
+        </preConditions>
+        <createTable tableName="author">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Создание таблицы для связи многие-ко-многим: книги - авторы -->
+    <changeSet id="create-book-author-table" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="book_author"/>
+            </not>
+        </preConditions>
+        <createTable tableName="book_author">
+            <column name="bookid" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="authorid" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Создание внешнего ключа для таблицы книги-авторы - авторы -->
+    <changeSet id="create-foreign-key-on-book-author-for-author" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="book_author" foreignKeyName="FK_book_author_authorid"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="book_author" baseColumnNames="authorid"
+                                 constraintName="FK_book_author_authorid" referencedTableName="author"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Создание внешнего ключа для таблицы книги-авторы - книги -->
+    <changeSet id="create-foreign-key-on-book-author-for-book" author="Maxim_Galitskiy">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="book_author" foreignKeyName="FK_book_author_bookid"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="book_author" baseColumnNames="bookid"
+                                 constraintName="FK_book_author_bookid" referencedTableName="book"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
