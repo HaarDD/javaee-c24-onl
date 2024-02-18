@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,6 +43,7 @@ public class BooksApiController {
 
     @Operation(summary = "Получить", description = "Позволяет получить данные книги по id")
     @GetMapping("/{bookId}")
+    @PreAuthorize("hasAnyAuthority('READER','LIBRARIAN','MANAGER')")
     public ResponseEntity<BookDto> getBookById(@PathVariable Integer bookId) {
         BookDto bookDto = booksService.getBookById(bookId);
         return ResponseEntity.ok(bookDto);
@@ -50,12 +52,14 @@ public class BooksApiController {
     @Operation(summary = "Добавить", description = "Позволяет добавить одну книгу, id игнорируется")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     public void addBook(@ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
         booksService.addBook(bookDto);
     }
 
     @Operation(summary = "Редактировать", description = "Позволяет редактировать одну книгу")
     @PutMapping("/{bookId}")
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     public void editBook(@PathVariable Integer bookId, @ModelAttribute @Valid @Parameter(description = "Модель книги") BookDto bookDto) {
         booksService.editBook(bookDto.setId(bookId));
     }
@@ -63,12 +67,14 @@ public class BooksApiController {
     @Operation(summary = "Удалить", description = "Позволяет удалить одну книгу")
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     public void deleteBook(@PathVariable Integer bookId) {
         booksService.deleteBook(bookId);
     }
 
     @Operation(summary = "Скачать файл книги", description = "Позволяет скачать файл книги по id книги")
     @GetMapping("/{bookId}/bookfile")
+    @PreAuthorize("hasAnyAuthority('READER','LIBRARIAN','MANAGER')")
     public ResponseEntity<Resource> downloadBookFile(@PathVariable Integer bookId) {
 
         Resource resource = bookFilesService.getBookFileResourceByBookId(bookId);
@@ -84,6 +90,7 @@ public class BooksApiController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     @Operation(summary = "Загрузить файл книги", description = "Позволяет загрузить файл книги и прикрепить его к книге")
     @PostMapping(path = "/{bookId}/bookfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -91,6 +98,7 @@ public class BooksApiController {
         bookFilesService.uploadBookFileByBookId(bookFile, bookId);
     }
 
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     @Operation(summary = "Удалить файл книги", description = "Позволяет удалить файл книги по id книги")
     @DeleteMapping("/{bookId}/bookfile")
     @ResponseStatus(HttpStatus.NO_CONTENT)

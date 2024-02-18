@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +33,8 @@ public class AuthorsApiController {
 
     private final AuthorService authorsService;
 
+
+    @PreAuthorize("hasAnyAuthority('READER','LIBRARIAN','MANAGER')")
     @Operation(summary = "Получить всех", description = "Позволяет получить всех авторов")
     @GetMapping("/all")
     public ResponseEntity<List<AuthorDto>> getAuthorsByIds() {
@@ -39,6 +42,7 @@ public class AuthorsApiController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('READER','LIBRARIAN','MANAGER')")
     @Operation(summary = "Получить статус по имени", description = "Позволяет узнать, существует ли автор с таким именем")
     @GetMapping("/exist")
     @ResponseStatus(HttpStatus.OK)
@@ -46,12 +50,14 @@ public class AuthorsApiController {
         authorsService.isAuthorExist(name);
     }
 
+    @PreAuthorize("hasAnyAuthority('READER','LIBRARIAN','MANAGER')")
     @Operation(summary = "Получить", description = "Позволяет получить автора по id")
     @GetMapping("/{authorId}")
     public ResponseEntity<AuthorDto> getAuthorById(@PathVariable @Parameter(description = "Id получаемого автора", required = true) Integer authorId) {
         return ResponseEntity.ok(authorsService.getAuthorById(authorId));
     }
 
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     @Operation(summary = "Добавить", description = "Позволяет добавить одного автора")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -59,12 +65,14 @@ public class AuthorsApiController {
         authorsService.addAuthor(authorDto);
     }
 
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     @Operation(summary = "Редактировать", description = "Позволяет редактировать одного автора")
     @PutMapping("/{authorId}")
     public void editAuthor(@PathVariable @Parameter(description = "Id изменяемого автора", required = true) Integer authorId, @ModelAttribute @Valid @Parameter(description = "Модель автора") AuthorDto authorDto) {
         authorsService.editAuthor(authorDto.setId(authorId));
     }
 
+    @PreAuthorize("hasAnyAuthority('LIBRARIAN','MANAGER')")
     @Operation(summary = "Удалить", description = "Позволяет удалить одного автора")
     @DeleteMapping("/{authorId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

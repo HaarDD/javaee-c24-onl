@@ -19,6 +19,7 @@ public class AuthorsMvcController {
 
     private final AuthorService authorsService;
 
+
     @GetMapping
     public String getAllAuthors(Model model) {
         List<AuthorDto> authorList = authorsService.getAllAuthors();
