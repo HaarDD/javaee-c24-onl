@@ -29,9 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static by.teachmeskills.lesson41.controller.auth.AuthController.AUTH_REQUEST_MAPPING;
-import static by.teachmeskills.lesson41.security.UserAuthorities.LIBRARIAN;
-import static by.teachmeskills.lesson41.security.UserAuthorities.MANAGER;
+import static by.teachmeskills.lesson41.controller.auth.AuthApiController.AUTH_REQUEST_MAPPING;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +37,7 @@ import static by.teachmeskills.lesson41.security.UserAuthorities.MANAGER;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    public static final String[] SWAGGER_AUTH_WHITELIST = new String[]{"/docs.html","/swagger-ui*/**",
+    public static final String[] SWAGGER_AUTH_WHITELIST = new String[]{"/docs.html", "/swagger-ui*/**",
             "/swagger-ui*/*swagger-initializer.js", "/swagger-ui.html", "/webjars/**",
             "/v3/api-docs**", "/bus/v3/api-docs**", "/api/docs.yaml/**"};
 
@@ -51,25 +49,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(SWAGGER_AUTH_WHITELIST);
+        web.ignoring().antMatchers("/static/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                //.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
-                //.and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
-                .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
-                .antMatchers("/api/users/reg").permitAll()
-                .antMatchers("/api/users/*").hasAnyAuthority(MANAGER, LIBRARIAN)
-                .antMatchers("/api/**").authenticated()
-                .antMatchers("/**").permitAll()
-                //.anyRequest().authenticated()
+                    .antMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
+                    .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
+                    .antMatchers("/api/users/reg").permitAll()
+                    .antMatchers("/js/**","/css/**").permitAll()
+                    .antMatchers("/**").authenticated()
+                    .anyRequest().authenticated()
                 .and()
-                .addFilterAfter(jwtFilter, AnonymousAuthenticationFilter.class)
+                .formLogin()
+                    .loginPage("/login")
+                    .loginProcessingUrl("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/books", true)
+                .and()
+                    .addFilterAfter(jwtFilter, AnonymousAuthenticationFilter.class)
                 .logout();
     }
 
