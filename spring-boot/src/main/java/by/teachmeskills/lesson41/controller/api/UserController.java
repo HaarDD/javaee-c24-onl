@@ -3,7 +3,7 @@ package by.teachmeskills.lesson41.controller.api;
 
 import by.teachmeskills.lesson41.dto.RegisterUserDto;
 import by.teachmeskills.lesson41.dto.UserDto;
-import by.teachmeskills.lesson41.jpa.OffsetLimitPageable;
+import by.teachmeskills.lesson41.config.pageable.OffsetLimitPageable;
 import by.teachmeskills.lesson41.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
