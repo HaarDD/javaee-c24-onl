@@ -62,7 +62,6 @@ public class JwtHelper {
                 .issuer(issuer)
                 .subject(userInfo.getName())
                 .claim(JWT_TOKEN_CLAIM, UUID.randomUUID().toString())
-                .claim(JWT_PRIVILEGE_CLAIM, userInfo.getAuthorities())
                 .claim(JWT_PRIVILEGE_CLAIM, userInfo.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList())
