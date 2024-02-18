@@ -10,6 +10,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
   datasource:
     hikari:
       leak-detection-threshold: 5000
@@ -20,7 +23,7 @@ spring:
       max-file-size: 20MB
 logging:
   level:
-    root: debug
+    root: info
   interceptor:
     enabled: false
 storage:
