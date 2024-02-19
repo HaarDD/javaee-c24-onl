@@ -26,6 +26,8 @@ logging:
     root: info
   interceptor:
     enabled: false
+cookie:
+  authorization-max-age: 600
 storage:
   book_files_path: "E:\\Projects\\Storage\\lesson37_bookstore_storage\\files\\"
 springdoc:
