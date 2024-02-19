@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/global/tom-select.bootstrap5.css}" rel="stylesheet">
@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editBookModal">
+    <button sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editBookModal">
         Добавить книгу
     </button>
     <button class="btn btn-primary mb-3" data-bs-target="#searchPanel" data-bs-toggle="collapse" id="showSearchBlockButton"
@@ -105,11 +105,11 @@
                     </div>
                     <p class="card-text" th:text="${book.isbn}"></p>
                     <p class="card-text" th:text="${book.pages}"></p>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    <button sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" type="button" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#deleteBookModal" th:data-book-id="${book.id}">
                         Удалить
                     </button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                    <button sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" type="button" class="btn btn-warning" data-bs-toggle="modal"
                             data-bs-target="#editBookModal" th:data-book-id="${book.id}">
                         Редактировать
                     </button>
@@ -120,7 +120,7 @@
 </div>
 
 <!-- Редактирование и добавление-->
-<div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+<div sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -168,7 +168,7 @@
 </div>
 
 <!-- Удаление -->
-<div class="modal fade" id="deleteBookModal" tabindex="-1" aria-labelledby="deleteBookModalLabel"
+<div sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" class="modal fade" id="deleteBookModal" tabindex="-1" aria-labelledby="deleteBookModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -194,5 +194,6 @@
 <script th:src="@{/js/global/tom-select.complete.min.js}"></script>
 <script th:src="@{/js/global/popper.min.js}"></script>
 <script th:src="@{/js/books.js}"></script>
+<script sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" th:src="@{/js/books-mng.js}"></script>
 </body>
 </html>
