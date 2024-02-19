@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                 .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
                 .antMatchers("/api/users/reg").permitAll()
-                .antMatchers("/js/**", "/css/**", "").permitAll()
+                .antMatchers("/js/**", "/css/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
