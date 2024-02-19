@@ -22,9 +22,7 @@ import static by.teachmeskills.lesson41.controller.auth.AuthApiController.AUTH_R
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    public static final String JWT_COOKIE_NAME = "JWT";
-
-    private static final String BEARER_PRE = "Bearer ";
+    public static final String JWT_COOKIE_NAME = "JWT_AUTH";
 
     private final JwtHelper jwtHelper;
 

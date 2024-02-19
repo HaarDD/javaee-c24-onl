@@ -49,7 +49,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/static/**");
     }
 
     @Override
@@ -57,20 +56,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                    .antMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
-                    .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
-                    .antMatchers("/api/users/reg").permitAll()
-                    .antMatchers("/js/**","/css/**").permitAll()
-                    .antMatchers("/**").authenticated()
-                    .anyRequest().authenticated()
+                .antMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
+                .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
+                .antMatchers("/api/users/reg").permitAll()
+                .antMatchers("/js/**", "/css/**", "").permitAll()
+                .antMatchers("/**").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/login")
-                    .permitAll()
-                    .defaultSuccessUrl("/books", true)
+                .loginPage("/login")
+                .permitAll()
                 .and()
-                    .addFilterAfter(jwtFilter, AnonymousAuthenticationFilter.class)
+                .addFilterAfter(jwtFilter, AnonymousAuthenticationFilter.class)
                 .logout();
     }
 
