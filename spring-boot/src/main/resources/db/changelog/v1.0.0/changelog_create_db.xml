@@ -56,7 +56,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="role_id" type="int">
-                <constraints nullable="false"/>=
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
