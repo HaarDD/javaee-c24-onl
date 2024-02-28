@@ -2,7 +2,7 @@ server:
   port : 8090
 spring:
   config:
-    import: classpath:/config/database.yaml
+    import: classpath:/config/database.yaml, classpath:/config/jwt.yaml
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -10,6 +10,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
   datasource:
     hikari:
       leak-detection-threshold: 5000
@@ -20,9 +23,11 @@ spring:
       max-file-size: 20MB
 logging:
   level:
-    root: debug
+    root: info
   interceptor:
     enabled: false
+cookie:
+  authorization-max-age: 600
 storage:
   book_files_path: "E:\\Projects\\Storage\\lesson37_bookstore_storage\\files\\"
 springdoc:

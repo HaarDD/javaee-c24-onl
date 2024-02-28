@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/global/bootstrap.min.css}" rel="stylesheet">
+    <title>Вход в библиотеку</title>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header">Вход в библиотеку</h5>
+                <div class="card-body">
+                    <form th:action="@{/auth}" method="get">
+                        <div class="form-group">
+                            <label for="login">Логин</label>
+                            <input type="text" class="form-control" id="login" name="login" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/global/jquery-3.7.1.min.js}"></script>
+<script th:src="@{/js/global/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson41.jpa;
+package by.teachmeskills.lesson41.config.pageable;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/global/tom-select.bootstrap5.css}" rel="stylesheet">
@@ -9,9 +9,6 @@
 <body>
 
 <div th:include="navbar"></div>
-
-
-
 
 <div class="container mt-5">
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editAuthorModal">
@@ -23,11 +20,11 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${author.name}"></h5>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    <button sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" type="button" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#deleteAuthorModal" th:data-author-id="${author.id}">
                         Удалить
                     </button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                    <button sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" type="button" class="btn btn-warning" data-bs-toggle="modal"
                             data-bs-target="#editAuthorModal" th:data-author-id="${author.id}">
                         Редактировать
                     </button>
@@ -38,7 +35,7 @@
 </div>
 
 <!-- Редактирование и добавление -->
-<div class="modal fade" id="editAuthorModal" tabindex="-1" aria-labelledby="editAuthorModalLabel" aria-hidden="true">
+<div sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" class="modal fade" id="editAuthorModal" tabindex="-1" aria-labelledby="editAuthorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -64,7 +61,7 @@
 </div>
 
 <!-- Удаление -->
-<div class="modal fade" id="deleteAuthorModal" tabindex="-1" aria-labelledby="deleteAuthorModalLabel"
+<div sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" class="modal fade" id="deleteAuthorModal" tabindex="-1" aria-labelledby="deleteAuthorModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -88,6 +85,6 @@
 <script th:src="@{/js/global/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/global/tom-select.complete.min.js}"></script>
 <script th:src="@{/js/global/popper.min.js}"></script>
-<script th:src="@{/js/authors.js}"></script>
+<script sec:authorize="hasAnyAuthority('LIBRARIAN','MANAGER')" th:src="@{/js/authors-mng.js}"></script>
 </body>
 </html>
